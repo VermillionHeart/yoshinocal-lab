@@ -1,0 +1,397 @@
+index.html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>YoshinoCal Lab V1</title>
+    <style>
+        html, body { height: 100%; }
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #b3e0ff 0%, #e6f6ff 40%, #56aaff 100%);
+            max-width: 650px;
+            margin: 2em auto 2em auto;
+            box-shadow: 0 0 32px 0 rgba(60,90,130,0.10);
+            border-radius: 18px;
+            padding-bottom: 2em;
+        }
+        h1 {
+            text-align: center;
+            color: #1166a9;
+            font-size: 2.2em;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.15em;
+            font-weight: 800;
+            text-shadow: 0px 2px 9px #cbe8fd, 0 0 0 #0d3e5d;
+            position: relative;
+        }
+        .labicon {
+            display:inline-block;
+            font-size:1.25em;
+            vertical-align: -0.15em;
+            margin: 0 0.1em;
+            filter: drop-shadow(0 0 5px #e6faff);
+        }
+        label { display: block; margin: 1em 0 0.2em 0; }
+        input, select, button { font-size: 1em; padding: 0.22em 0.5em; margin-right: 0.5em; border-radius: 4px;}
+        input, select {
+            border: 1px solid #a4d2f8;
+            background: #f7fdff;
+        }
+        .result {
+            background: #eaf8fd;
+            padding: 1.3em 1.4em;
+            margin-top: 1.6em;
+            border-radius: 12px;
+            border: 2px solid #6ed3ff;
+            font-size: 1.15em;
+            line-height: 1.7;
+            box-shadow: 0 2px 14px #b2e5f6;
+            color: #1166a9;
+        }
+        .result strong {
+            color: #0d8bbf;
+            background: #d0f5ff;
+            padding: 0 0.2em;
+            border-radius: 3px;
+        }
+        .result-section {
+            margin-top: 1.1em;
+            margin-bottom: 0.7em;
+            border-left: 4px solid #59c7ee;
+            padding-left: 0.7em;
+            font-weight: bold;
+            color: #148bbd;
+        }
+        .result-warning {
+            color: #b71c1c;
+            background: #e3f7fd;
+            font-weight: bold;
+            padding: 0.2em 0.4em;
+            border-radius: 2px;
+            margin: 0.5em 0;
+            display: inline-block;
+            border-left: 3px solid #fbc02d;
+        }
+        .drug-info {
+            background: #daf7ff;
+            padding: 0.7em 1.2em;
+            margin-top: 1.1em;
+            border-radius: 9px;
+            box-shadow: 0 1px 5px #9cd4eb33;
+            max-width: 100%;
+            overflow-x: auto;
+            word-break: break-all;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5em;
+            table-layout: fixed;
+        }
+        .info-table tr { border-bottom: 1px solid #b0e1f7;}
+        .info-table td {
+            padding: 0.5em 0.8em;
+            vertical-align: middle;
+        }
+        .info-label {
+            width: 7em;
+            color: #1578ae;
+            font-weight: bold;
+            background: #e8f8fc;
+        }
+        .icon {
+            color: #2faee6;
+            font-size: 1.1em;
+            margin-right:0.2em;
+        }
+        .input-group { display: flex; align-items: center; gap: 0.5em; }
+        .input-label { min-width: 11em; }
+        .btn {
+            padding: 0.4em 0.8em;
+            border-radius: 4px;
+            border: 1px solid #a2d9f7;
+            background: #e6f8ff;
+            color: #148bbd;
+            cursor: pointer;
+            font-size: 0.98em;
+            font-weight: 500;
+            transition: background .18s,color .18s;
+        }
+        .btn-primary {
+            background: #2faee6;
+            color: #fff;
+            border-color: #23a0d9;
+        }
+        .btn-primary:hover {
+            background: #148bbd;
+            color: #fff;
+        }
+        small { color:#337;}
+        hr {
+            border: 0;
+            border-top: 1px solid #aae1f6;
+            margin: 1.3em 0 1.3em 0;
+        }
+        ::-webkit-scrollbar-thumb { background: #7cc9ea; border-radius: 8px;}
+        ::-webkit-scrollbar-track { background: #e6f6ff;}
+        ::-webkit-scrollbar { width: 8px; }
+    </style>
+</head>
+<body>
+    <h1>
+        <span class="labicon" title="Pharmacology">💊</span>
+        YoshinoCal Lab V1
+        <span class="labicon" title="Pharmacology">💊</span>
+    </h1>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">薬物名:
+            <input type="text" id="drugname" autocomplete="off" placeholder="例: Ascorbic Acid">
+        </label>
+    </div>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">CIDコード:
+            <input type="text" id="cid" autocomplete="off" placeholder="例: 54670067">
+        </label>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="fetchPubChem()">PubChemから物質情報を検索</button>
+    </div>
+    <div id="drug_info" class="drug-info" style="display:none;"></div>
+    <small>（自動で取得できない場合は手入力してください）</small>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">分子量（g/mol）:
+            <input type="number" id="mw" step="0.01" placeholder="分子量を入力">
+        </label>
+    </div>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">ストック溶液のモル濃度:
+            <input type="number" id="molarity" step="any" min="0" placeholder="濃度を入力">
+            <select id="molarity_unit">
+                <option value="1">mol/L</option>
+                <option value="0.001">mmol/L</option>
+                <option value="0.000001">μmol/L</option>
+                <option value="0.000000001">nmol/L</option>
+            </select>
+        </label>
+    </div>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">ストック溶液量:
+            <input type="number" id="volume" step="any" min="0" placeholder="調製量を入力">
+            <select id="volume_unit">
+                <option value="0.001">mL</option>
+                <option value="1">L</option>
+            </select>
+        </label>
+    </div>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">表示単位（必要な薬量）:
+            <select id="mass_unit">
+                <option value="g">g</option>
+                <option value="mg">mg</option>
+                <option value="μg">μg</option>
+            </select>
+        </label>
+    </div>
+    <hr>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">実験での最終濃度:
+            <input type="number" id="final_molarity" step="any" min="0" placeholder="例: 5">
+            <select id="final_molarity_unit">
+                <option value="1">mol/L</option>
+                <option value="0.001">mmol/L</option>
+                <option value="0.000001">μmol/L</option>
+                <option value="0.000000001">nmol/L</option>
+            </select>
+        </label>
+    </div>
+    <div class="input-group">
+        <span class="icon">●</span>
+        <label class="input-label">最終液量（実験で使う全量）:
+            <input type="number" id="final_total_vol" step="any" min="0" placeholder="例: 100">
+            <select id="final_total_vol_unit">
+                <option value="0.001">μL</option>
+                <option value="1">mL</option>
+            </select>
+        </label>
+    </div>
+    <div class="result" id="result">ここに計算結果が表示されます。</div>
+<script>
+    function formatNumber(num) {
+        if (num === 0) return "0";
+        if (Math.abs(num) >= 1) {
+            return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        } else if (Math.abs(num) >= 0.01) {
+            return num.toLocaleString(undefined, { maximumFractionDigits: 4 });
+        } else {
+            return num.toFixed(5).replace(/0+$/,"").replace(/\.$/,"");
+        }
+    }
+
+    function fetchPubChem() {
+        const cid = document.getElementById('cid').value.trim();
+        const name = document.getElementById('drugname').value.trim();
+        let endpoint = "";
+        if (cid) {
+            endpoint = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularWeight,IUPACName,Title,CanonicalSMILES,MolecularFormula/JSON`;
+        } else if (name) {
+            endpoint = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(name)}/property/MolecularWeight,IUPACName,Title,CID,CanonicalSMILES,MolecularFormula/JSON`;
+        } else {
+            alert("薬物名、CIDのいずれかを入力してください。");
+            return;
+        }
+        fetch(endpoint)
+            .then(response => {
+                if (!response.ok) throw new Error("情報が見つかりませんでした。");
+                return response.json();
+            })
+            .then(data => {
+                const prop = data.PropertyTable.Properties[0];
+                if (prop.CID) document.getElementById('cid').value = prop.CID;
+                if (prop.Title) document.getElementById('drugname').value = prop.Title;
+                else if (prop.IUPACName) document.getElementById('drugname').value = prop.IUPACName;
+                if (prop.MolecularWeight) document.getElementById('mw').value = prop.MolecularWeight;
+
+                let infoHTML = "<table class='info-table'>";
+                infoHTML += `<tr><td class='info-label'>薬物名</td><td>${prop.Title ? prop.Title : (prop.IUPACName ? prop.IUPACName : "-")}</td></tr>`;
+                infoHTML += `<tr><td class='info-label'>CID</td><td>${prop.CID ? prop.CID : "-"}</td></tr>`;
+                infoHTML += `<tr><td class='info-label'>化学式</td><td>${prop.MolecularFormula ? prop.MolecularFormula : "-"}</td></tr>`;
+                infoHTML += `<tr><td class='info-label'>分子量</td><td>${prop.MolecularWeight ? prop.MolecularWeight : "-"}</td></tr>`;
+                if (prop.CanonicalSMILES)
+                    infoHTML += `<tr><td class='info-label'>SMILES</td><td>${prop.CanonicalSMILES}</td></tr>`;
+                infoHTML += "</table>";
+                document.getElementById('drug_info').innerHTML = infoHTML;
+                document.getElementById('drug_info').style.display = "block";
+                calculate();
+            })
+            .catch(error => {
+                document.getElementById('drug_info').style.display = "none";
+                alert("物質情報の取得に失敗しました: " + error.message);
+            });
+    }
+
+    function calculate() {
+        // ストック溶液調製計算
+        const mw = parseFloat(document.getElementById('mw').value);
+        const molarity = parseFloat(document.getElementById('molarity').value);
+        const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
+        const volume = parseFloat(document.getElementById('volume').value);
+        const volume_unit = parseFloat(document.getElementById('volume_unit').value);
+        const mass_unit = document.getElementById('mass_unit').value;
+
+        // 実験条件
+        const final_molarity = parseFloat(document.getElementById('final_molarity').value);
+        const final_molarity_unit = parseFloat(document.getElementById('final_molarity_unit').value);
+        const final_total_vol = parseFloat(document.getElementById('final_total_vol').value);
+        const final_total_vol_unit = parseFloat(document.getElementById('final_total_vol_unit').value);
+
+        // 入力チェック
+        if (isNaN(mw) || mw <= 0) {
+            document.getElementById('result').innerText = '分子量を正しく入力してください。';
+            return;
+        }
+        if (isNaN(molarity) || molarity <= 0) {
+            document.getElementById('result').innerText = 'ストック溶液のモル濃度を正しく入力してください。';
+            return;
+        }
+        if (isNaN(volume) || volume <= 0) {
+            document.getElementById('result').innerText = 'ストック溶液量を正しく入力してください。';
+            return;
+        }
+
+        const molarity_molL = molarity * molarity_unit; // mol/L
+        const volume_L = volume * volume_unit; // L
+
+        // 必要な質量（g）
+        const mass_g = mw * molarity_molL * volume_L;
+        const mass_mg = mass_g * 1000;
+        const mass_ug = mass_g * 1e6;
+
+        let display_mass = 0;
+        let unit_str = "";
+        if (mass_unit === "g") {
+            display_mass = mass_g;
+            unit_str = "g";
+        } else if (mass_unit === "mg") {
+            display_mass = mass_mg;
+            unit_str = "mg";
+        } else if (mass_unit === "μg") {
+            display_mass = mass_ug;
+            unit_str = "μg";
+        }
+
+        let result_str = `<span class="result-section">【ストック溶液調製】</span><br>`;
+        result_str += `必要な薬の質量: <strong>${formatNumber(display_mass)}</strong> ${unit_str}<br>`;
+        result_str += `（薬 <strong>${formatNumber(mass_mg)}</strong> mg ＋ 溶媒 <strong>${formatNumber(volume * volume_unit * 1000)}</strong> μL を混合）`;
+
+        // 1mg未満警告・ストック推奨
+        if (mass_mg < 1) {
+            const stock_conc_mgml = 10;
+            const min_weight_mg = 1;
+            let stock_vol_ml = min_weight_mg / stock_conc_mgml;
+            if (stock_vol_ml < 1) stock_vol_ml = 1;
+            const stock_weight_mg = stock_conc_mgml * stock_vol_ml;
+            const required_stock_vol_ml = mass_mg / stock_conc_mgml;
+            const required_stock_vol_ul = required_stock_vol_ml * 1000;
+            const total_vol_ul = volume * volume_unit * 1000;
+            const diluent_vol_ul = total_vol_ul - required_stock_vol_ul;
+
+            result_str += `
+<br><br><span class="result-warning">⚠️ 必要な薬量が1mg未満です。直接の秤量は困難です。</span>
+<br>例：10mg/mLストック溶液を <strong>${formatNumber(stock_vol_ml)}</strong> mL作成
+（薬 <strong>${formatNumber(stock_weight_mg)}</strong> mg ＋ 溶媒 <strong>${formatNumber(stock_vol_ml)}</strong> mL）
+<br>ストック溶液から <strong>${formatNumber(required_stock_vol_ul)}</strong> μL（= <strong>${formatNumber(required_stock_vol_ml)}</strong> mL）を
+新しい容器に取り、<strong>${formatNumber(diluent_vol_ul)}</strong> μLの溶媒を加えて最終容量 <strong>${formatNumber(total_vol_ul)}</strong> μLとします。
+            `;
+        }
+
+        // 希釈計算
+        if (!isNaN(final_molarity) && final_molarity > 0 &&
+            !isNaN(final_total_vol) && final_total_vol > 0) {
+
+            // 濃度換算
+            const C1 = molarity * molarity_unit; // ストック（mol/L）
+            const C2 = final_molarity * final_molarity_unit; // 最終（mol/L）
+
+            // 最終液量、入力単位（μLまたはmL）→ μLに揃える
+            const V2_unit = parseFloat(document.getElementById('final_total_vol_unit').value); // 0.001: μL, 1: mL
+            const V2 = final_total_vol * (V2_unit === 1 ? 1000 : 1); // μL単位
+
+            // ストック溶液添加量（μL）
+            // C1V1 = C2V2 → V1 = (C2 * V2) / C1
+            const V1 = (C2 * V2 / 1e6) / C1 * 1e6; // μL
+            const V1_fixed = Math.max(0, V1); // 負値防止
+            // 溶媒量（μL）＝最終液量（μL）− ストック溶液添加量（μL）
+            const diluent_uL = V2 - V1_fixed;
+
+            result_str += `<br><br><span class="result-section">【実験時のストック溶液添加量】</span><br>`;
+            result_str += `
+最終濃度 <strong>${formatNumber(final_molarity)}</strong> ${document.getElementById('final_molarity_unit').options[document.getElementById('final_molarity_unit').selectedIndex].text}、
+最終液量 <strong>${formatNumber(final_total_vol)}</strong> ${document.getElementById('final_total_vol_unit').options[document.getElementById('final_total_vol_unit').selectedIndex].text}<br>
+→ <strong>ストック溶液 ${formatNumber(V1_fixed)}</strong> μL ＋ 溶媒 <strong>${formatNumber(diluent_uL)}</strong> μL（合計 <strong>${formatNumber(V2)}</strong> μL）`;
+        }
+
+        document.getElementById('result').innerHTML = result_str;
+    }
+
+    [
+        "mw","molarity","molarity_unit","volume","volume_unit","mass_unit",
+        "final_molarity","final_molarity_unit","final_total_vol","final_total_vol_unit"
+    ].forEach(id => {
+        document.getElementById(id).addEventListener('input', calculate);
+        document.getElementById(id).addEventListener('change', calculate);
+    });
+
+    calculate();
+</script>
+</body>
+</html>
