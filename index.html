@@ -3,202 +3,1136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>YoshinovaCalc Lab V1.0</title>
-  
-  <!-- 薬理学テーマのファビコン -->
+  <title>YoshinovaCalc Lab V2.0 - Enhanced</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230d6efd;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230b5ed7;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='url(%23grad)' rx='6'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23fff'/%3E%3Ccircle cx='16' cy='6' r='2' fill='%23fff'/%3E%3Ccircle cx='24' cy='8' r='2' fill='%23fff'/%3E%3Ccircle cx='12' cy='16' r='2' fill='%23fff'/%3E%3Ccircle cx='20' cy='14' r='2' fill='%23fff'/%3E%3Ccircle cx='8' cy='24' r='2' fill='%23fff'/%3E%3Ccircle cx='16' cy='22' r='2' fill='%23fff'/%3E%3Ccircle cx='24' cy='24' r='2' fill='%23fff'/%3E%3Cline x1='8' y1='8' x2='16' y2='6' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='6' x2='24' y2='8' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='8' y1='8' x2='12' y2='16' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='6' x2='12' y2='16' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='6' x2='20' y2='14' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='24' y1='8' x2='20' y2='14' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='12' y1='16' x2='8' y2='24' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='12' y1='16' x2='16' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='20' y1='14' x2='16' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='20' y1='14' x2='24' y2='24' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='22' x2='24' y2='24' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E">
-  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    * { box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
     :root {
-      --primary-bg: #fff; --secondary-bg: #f8f9fa; --tertiary-bg: #e9ecef; --border-color: #dee2e6;
-      --primary-text: #212529; --secondary-text: #495057; --muted-text: #6c757d;
-      --primary-blue: #0d6efd; --primary-blue-hover: #0b5ed7; --primary-blue-focus: #0a58ca;
-      --success-color: #198754; --success-bg: #d1e7dd; --warning-color: #fd7e14; --warning-bg: #fff3cd;
-      --warning-border: #ffecb5; --error-color: #dc3545; --error-bg: #f8d7da; --error-border: #f5c2c7;
-      --info-color: #0dcaf0; --info-bg: #d1ecf1; --info-border: #b6effb;
-      --focus-ring: 0 0 0 3px rgba(13,110,253,0.25); --transition: all 0.15s ease-in-out;
-      --result-bg: #f8f9fa; --result-border: #6c757d; --result-shadow: rgba(0,0,0,0.08);
+      --primary-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --primary-bg-dark: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      --panel-bg: rgba(255, 255, 255, 0.85);
+      --panel-bg-dark: rgba(30, 40, 50, 0.9);
+      --border-color: rgba(255, 255, 255, 0.18);
+      --border-color-dark: rgba(255, 255, 255, 0.1);
+      --primary-text: #1a202c;
+      --primary-text-dark: #e2e8f0;
+      --secondary-text: #4a5568;
+      --secondary-text-dark: #a0aec0;
+      --muted-text: #718096;
+      --muted-text-dark: #718096;
+      --primary-blue: #4299e1;
+      --primary-blue-hover: #3182ce;
+      --primary-blue-focus: #2c5aa0;
+      --success-color: #48bb78;
+      --warning-color: #ed8936;
+      --error-color: #f56565;
+      --glass-bg: rgba(255, 255, 255, 0.25);
+      --glass-bg-dark: rgba(0, 0, 0, 0.3);
+      --backdrop-blur: blur(10px);
+      --card-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      --card-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --neumorphism-light: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+      --neumorphism-dark: 20px 20px 60px #1e2a3a, -20px -20px 60px #364a5e;
     }
-    html, body { height: 100%; margin: 0; font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: var(--primary-text); background: var(--primary-bg);}
-    .container, .drug-info { overflow-x: auto; }
-    .container { max-width: 700px; margin: 1rem auto; padding: 1.5rem; background: var(--primary-bg); border: 2px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
-    .header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);}
-    h1 { color: var(--primary-text); font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2;}
-    .labicon { display: inline-block; font-size: 1.1em; margin: 0 0.2rem; vertical-align: middle;}
-    .copyright { font-size: 0.8rem; color: var(--muted-text); margin-top: 0.5rem;}
-    
-    .results-panel {
-      background: var(--result-bg); border: 1px solid var(--result-border);
-      border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
-      box-shadow: 0 2px 8px var(--result-shadow), 0 1px 3px var(--result-shadow);
-      transition: all 0.3s ease-in-out;
+
+    [data-theme="dark"] {
+      --panel-bg: var(--panel-bg-dark);
+      --border-color: var(--border-color-dark);
+      --primary-text: var(--primary-text-dark);
+      --secondary-text: var(--secondary-text-dark);
+      --muted-text: var(--muted-text-dark);
+      --glass-bg: var(--glass-bg-dark);
+      --card-shadow: var(--card-shadow-dark);
     }
-    .results-title { font-weight: 600; margin-bottom: 1.2rem; color: var(--primary-text); font-size: 1rem; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--result-border); padding-bottom: 0.5rem;}
-    .results-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2,1fr);}
-    .result-item { background: var(--primary-bg); padding: 1rem; border-radius: 6px; border: 1px solid var(--border-color); text-align: center;}
-    .result-label { font-size: 0.75rem; color: var(--secondary-text); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;}
-    .result-value { font-size: 1.1rem; font-weight: 700; color: var(--primary-text); font-family: 'Monaco', 'Menlo', 'Consolas', monospace;}
-    .results-placeholder { text-align: center; color: var(--muted-text); font-style: italic; padding: 2rem 1rem; background: var(--primary-bg); border-radius: 6px; border: 1px dashed var(--border-color);}
-    
-    /* 改善された最小化ボタン */
-    .minimize-btn { 
-      position: absolute; top: 0.7em; right: 1em; 
-      background: var(--primary-blue); color: white; 
-      border: none; border-radius: 4px;
-      font-size: 1rem; padding: 0.3em 0.6em;
-      cursor: pointer; z-index: 10101; 
-      transition: all 0.2s ease;
+
+    * {
+      box-sizing: border-box;
+      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--primary-text);
+      background: var(--primary-bg);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body[data-theme="dark"] {
+      background: var(--primary-bg-dark);
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 2rem auto 1.5rem auto;
+      padding: 2.5rem 2rem 2rem 2rem;
+      background: var(--panel-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-color);
+      position: relative;
+      z-index: 1;
+      animation: slideInUp 0.6s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+      20%, 40%, 60%, 80% { transform: translateX(3px); }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-50px);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05) translateY(0);
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 5px var(--warning-color);
+      }
+      50% {
+        box-shadow: 0 0 20px var(--warning-color), 0 0 30px var(--warning-color);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+      backdrop-filter: var(--backdrop-blur);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-toggle::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .theme-toggle:hover::before {
+      left: 100%;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(10deg);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.95);
+    }
+
+    h1 {
+      color: var(--primary-blue);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(45deg, var(--primary-blue), var(--success-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: linear-gradient(45deg, var(--primary-blue), var(--success-color));
+      color: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
       font-weight: 600;
-      line-height: 1;
+      margin-left: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
-    .minimize-btn:hover { background: var(--primary-blue-hover); transform: scale(1.05); }
-    .minimize-btn:active, .minimize-btn:focus { background: var(--primary-blue-focus); }
-    
-    /* 復元ボタン（最小化時に表示） */
-    .restore-btn {
-      position: absolute; top: 0.5em; right: 0.5em;
-      background: var(--primary-blue); color: white;
-      border: none; border-radius: 50%;
-      width: 24px; height: 24px;
-      font-size: 0.8rem; cursor: pointer;
-      z-index: 10102; transition: all 0.2s ease;
-      display: none; align-items: center; justify-content: center;
+
+    .labicon {
+      font-size: 1.3em;
+      vertical-align: middle;
+      animation: pulse 2s infinite;
     }
-    .restore-btn:hover { background: var(--primary-blue-hover); transform: scale(1.1); }
-    
-    .show-results-btn { display: none; position: fixed; left: 50%; bottom: 1em; transform: translateX(-50%); z-index: 10001; font-size: 1.1rem; padding: 0.7em 2em; border-radius: 2em; background: var(--primary-blue); color: #fff; border: none; box-shadow: 0 2px 12px rgba(0,0,0,0.1); cursor: pointer;}
-    
-    /* PC用スタイリング */
-    @media (min-width: 769px) {
+
+    .copyright {
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      margin-top: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-btn {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--secondary-text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: var(--backdrop-blur);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .toolbar-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .toolbar-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      color: var(--primary-blue);
+      border-color: var(--primary-blue);
+    }
+
+    .toolbar-btn:hover::before {
+      left: 100%;
+    }
+
+    .toolbar-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .toolbar-btn.active {
+      background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-hover));
+      color: white;
+      border-color: var(--primary-blue);
+      box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .toolbar-btn.active::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border-radius: 18px;
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .form-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-blue), var(--success-color));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .form-section.completed::before {
+      transform: scaleX(1);
+    }
+
+    .form-section.completed {
+      border-color: var(--success-color);
+      box-shadow: 0 0 20px rgba(72, 187, 120, 0.2);
+    }
+
+    .form-section.has-warnings {
+      border-color: var(--warning-color);
+      background: linear-gradient(135deg, 
+        var(--glass-bg), 
+        rgba(237, 137, 54, 0.05)
+      );
+      animation: glow 2s infinite;
+    }
+
+    .form-section.has-errors {
+      border-color: var(--error-color);
+      background: linear-gradient(135deg, 
+        var(--glass-bg), 
+        rgba(245, 101, 101, 0.05)
+      );
+      animation: shake 0.5s ease-in-out;
+    }
+
+    .form-section h2 {
+      margin: 0 0 1.2rem 0;
+      color: var(--primary-blue);
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(45deg, var(--primary-blue), var(--success-color));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.8rem;
+    }
+
+    .section-status {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-weight: 600;
+      margin-left: auto;
+      transition: all 0.3s ease;
+    }
+
+    .section-status.completed {
+      background: linear-gradient(45deg, var(--success-color), #68d391);
+      color: white;
+      box-shadow: 0 2px 10px rgba(72, 187, 120, 0.3);
+    }
+
+    .section-status.error {
+      background: linear-gradient(45deg, var(--error-color), #fc8181);
+      color: white;
+      box-shadow: 0 2px 10px rgba(245, 101, 101, 0.3);
+    }
+
+    .section-status.warning {
+      background: linear-gradient(45deg, var(--warning-color), #f6ad55);
+      color: white;
+      box-shadow: 0 2px 10px rgba(237, 137, 54, 0.3);
+      animation: pulse 1.5s infinite;
+    }
+
+    .input-group {
+      margin-bottom: 1.3rem;
+      position: relative;
+    }
+
+    .input-label {
+      color: var(--primary-text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      position: relative;
+    }
+
+    .required::after {
+      content: " *";
+      color: var(--error-color);
+      font-weight: bold;
+      animation: pulse 2s infinite;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .input-with-status {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex: 1;
+    }
+
+    .input-with-unit {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      padding: 0.3rem;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .input-with-unit:focus-within {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .input-with-unit input[type="number"] {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 1rem;
+      padding: 0.8rem;
+      color: var(--primary-text);
+      font-weight: 500;
+    }
+
+    .input-with-unit select {
+      border: none;
+      background: var(--glass-bg);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.9rem;
+      color: var(--secondary-text);
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      min-width: 80px;
+    }
+
+    .input-with-unit span {
+      color: var(--muted-text);
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    input, select {
+      font-size: 1rem;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--primary-text);
+      transition: all 0.3s ease;
+      min-height: 48px;
+      font-weight: 500;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+      transform: translateY(-2px);
+    }
+
+    input.valid {
+      border-color: var(--success-color);
+      background: rgba(72, 187, 120, 0.05);
+    }
+
+    input.invalid {
+      border-color: var(--error-color) !important;
+      background: rgba(245, 101, 101, 0.05);
+      animation: shake 0.5s ease-in-out;
+    }
+
+    input.warning {
+      border-color: var(--warning-color) !important;
+      background: rgba(237, 137, 54, 0.05);
+      animation: glow 1.5s infinite;
+    }
+
+    .input-status {
+      font-size: 1.2rem;
+      min-width: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      align-self: center;
+    }
+
+    .preset-chemicals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .preset-btn {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.7rem 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      color: var(--secondary-text);
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preset-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(66, 153, 225, 0.2), transparent);
+      transition: left 0.4s;
+    }
+
+    .preset-btn:hover::before {
+      left: 100%;
+    }
+
+    .preset-btn:hover {
+      background: var(--primary-blue);
+      color: white;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+    }
+
+    .preset-btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    /* 🎯 ここが最重要！フィールド直下のメッセージ表示を大幅強化 */
+    .input-error-message, .input-warning-message {
+      font-size: 0.85rem;
+      min-height: 1.2em;
+      margin-top: 0.4rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      line-height: 1.4;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: bounceIn 0.4s ease-out;
+      border-left: 4px solid;
+      backdrop-filter: var(--backdrop-blur);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-error-message {
+      color: var(--error-color);
+      background: linear-gradient(135deg, 
+        rgba(245, 101, 101, 0.15), 
+        rgba(245, 101, 101, 0.05)
+      );
+      border-left-color: var(--error-color);
+    }
+
+    .input-error-message::before {
+      content: "⚠️";
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .input-warning-message {
+      color: var(--warning-color);
+      background: linear-gradient(135deg, 
+        rgba(237, 137, 54, 0.15), 
+        rgba(237, 137, 54, 0.05)
+      );
+      border-left-color: var(--warning-color);
+    }
+
+    .input-warning-message::before {
+      content: "💡";
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* 空の場合はメッセージを完全に隠す */
+    .input-error-message:empty, .input-warning-message:empty {
+      display: none;
+    }
+
+    .section-result {
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      border: 1px solid var(--border-color);
+      color: var(--primary-text);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      transform: translateY(-10px);
+    }
+
+    .section-result.show {
+      opacity: 1;
+      max-height: 300px;
+      transform: translateY(0);
+    }
+
+    .section-result strong {
+      color: var(--success-color);
+      font-weight: 700;
+    }
+
+    .results-panel {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      width: 380px;
+      max-width: 90vw;
+      background: var(--panel-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      padding: 1.5rem;
+      z-index: 999;
+      animation: slideInRight 0.6s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .results-title {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary-blue);
+      font-size: 1.1rem;
+      text-align: center;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      position: relative;
+    }
+
+    .results-title::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(45deg, var(--primary-blue), var(--success-color));
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .result-item {
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-blue), var(--success-color));
+    }
+
+    .result-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .result-label {
+      font-size: 0.75rem;
+      color: var(--secondary-text);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .result-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary-text);
+      word-break: break-all;
+    }
+
+    .results-placeholder {
+      text-align: center;
+      color: var(--muted-text);
+      font-style: italic;
+      padding: 2rem 1rem;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      border: 2px dashed var(--border-color);
+      backdrop-filter: var(--backdrop-blur);
+    }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-hover));
+      color: white;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(66, 153, 225, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: var(--secondary-text);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--secondary-text);
+      color: white;
+    }
+
+    .history-panel {
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .history-item:hover {
+      background: var(--primary-blue);
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .formula-display {
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--primary-text);
+      transition: all 0.3s ease;
+    }
+
+    .drug-info {
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .info-table td {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--secondary-text);
+      width: 30%;
+    }
+
+    /* 🎯 フローティング通知（緊急時用） */
+    .floating-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      max-width: 350px;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      z-index: 1000;
+      animation: bounceIn 0.5s ease-out;
+      backdrop-filter: var(--backdrop-blur);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      border-left: 4px solid;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .floating-notification.success {
+      background: linear-gradient(135deg, rgba(72, 187, 120, 0.9), rgba(72, 187, 120, 0.7));
+      color: white;
+      border-left-color: var(--success-color);
+    }
+
+    .floating-notification.warning {
+      background: linear-gradient(135deg, rgba(237, 137, 54, 0.9), rgba(237, 137, 54, 0.7));
+      color: white;
+      border-left-color: var(--warning-color);
+    }
+
+    .floating-notification.error {
+      background: linear-gradient(135deg, rgba(245, 101, 101, 0.9), rgba(245, 101, 101, 0.7));
+      color: white;
+      border-left-color: var(--error-color);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .keyboard-shortcuts {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .keyboard-shortcuts:hover {
+      opacity: 1;
+    }
+
+    small {
+      color: var(--muted-text);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1200px) {
       .results-panel {
-        position: fixed !important; top: 2rem; right: 2rem; width: 300px; max-width: 25vw; z-index: 1000; margin: 0;
-        backdrop-filter: blur(10px); background: rgba(248, 249, 250, 0.95); border: 2px solid var(--result-border);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
-      }
-      
-      /* PC用最小化状態 - ボタンは残す */
-      .results-panel.minimized {
-        width: 120px !important; height: 40px !important; padding: 0.5rem !important; overflow: hidden;
-        border-radius: 20px 0 0 20px !important; right: 0 !important;
-      }
-      .results-panel.minimized .results-title { 
-        font-size: 0.8rem; margin: 0; border: none; padding: 0; white-space: nowrap; cursor: pointer;
-      }
-      .results-panel.minimized #results-content { display: none !important; }
-      .results-panel.minimized .minimize-btn { display: none !important; }
-      .results-panel.minimized .restore-btn { display: flex !important; }
-      
-      .show-results-btn { display: none !important; }
-      .container { max-width: 650px; margin: 1rem auto; }
-      
-      @media (min-width: 1400px) {
-        .container { max-width: 700px; }
-        .results-panel { width: 320px; max-width: 20vw; }
-      }
-      @media (min-width: 1000px) and (max-width: 1399px) {
-        .container { max-width: 600px; }
+        right: 1rem;
+        width: 340px;
       }
     }
-    
-    /* モバイル用スタイリング */
+
     @media (max-width: 768px) {
-      .results-panel {
-        position: fixed !important; left: 0; right: 0; bottom: 0; z-index: 10000; margin: 0; border-radius: 0; border-width: 2px 0 0 0; box-shadow: 0 -2px 8px var(--result-shadow); width: 100vw; max-width: 100vw; min-height: unset; padding: 0.8rem 1rem 1.6rem 1rem; background: var(--result-bg);
+      .container {
+        max-width: 95vw;
+        padding: 1.5rem 1rem;
+        margin: 1rem auto;
       }
-      .results-panel.minimized { display: none !important; }
-      .restore-btn { display: none !important; }
-      body { padding-bottom: 8.5em; }
-      .results-title { padding-bottom: 0.3rem;}
-      .show-results-btn { display: block; }
+
+      .results-panel {
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        width: 100vw;
+        max-width: 100vw;
+        border-radius: 20px 20px 0 0;
+        border-width: 1px 0 0 0;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem 1rem 2rem 1rem;
+        animation: slideInUp 0.6s ease-out;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+
+      .toolbar {
+        justify-content: center;
+      }
+
+      .toolbar-btn {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.9rem;
+      }
+
+      .keyboard-shortcuts {
+        display: none;
+      }
+
+      .preset-chemicals {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .floating-notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+      }
     }
-    
-    /* フォームセクション */
-    .form-section { margin-bottom: 1.5rem; padding: 1.5rem; background: var(--secondary-bg); border-radius: 8px; border: 1px solid var(--border-color); transition: var(--transition);}
-    .form-section.completed { border-color: var(--success-color); box-shadow: 0 0 0 1px var(--success-color);}
-    .form-section h2 { margin: 0 0 1rem 0; color: var(--primary-text); font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;}
-    
-    /* セクションステータス */
-    .section-status { font-size: 0.8rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500;}
-    .section-status.completed { background: var(--success-bg); color: var(--success-color);}
-    .section-status.error { background: var(--error-bg); color: var(--error-color);}
-    
-    .input-group { margin-bottom: 1rem;}
-    .input-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap;}
-    .input-with-status { display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 200px;}
-    
-    /* 入力ステータス */
-    .input-status { font-size: 1.1rem; min-width: 1.2rem; text-align: center;}
-    
-    .input-label { color: var(--primary-text); font-weight: 500; font-size: 0.95rem; margin-bottom: 0.25rem;}
-    .required::after { content: " *"; color: var(--error-color); font-weight: bold;}
-    
-    input, select { font-size: 0.95rem; padding: 0.6rem 0.8rem; border-radius: 6px; border: 2px solid var(--border-color); font-family: inherit; background-color: var(--primary-bg); color: var(--primary-text); transition: var(--transition); min-height: 48px;}
-    input:focus, select:focus { outline: none; border-color: var(--primary-blue); box-shadow: var(--focus-ring);}
-    input.valid { border-color: var(--success-color);}
-    input.invalid { border-color: var(--error-color);}
-    
-    .btn { min-height: 48px; display: inline-block; padding: 0.6rem 1.2rem; border-radius: 6px; border: none; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: var(--transition); font-family: inherit;}
-    .btn:focus { outline: none; box-shadow: var(--focus-ring);}
-    .btn:disabled { opacity: 0.65; cursor: not-allowed;}
-    
-    .section-result { background: var(--info-bg); padding: 0.5rem 0.75rem; border-radius: 4px; margin-top: 1rem; font-size: 0.9rem; border: 1px solid var(--info-border); color: var(--primary-text); opacity: 0; max-height: 0; overflow: hidden; transition: all 0.3s ease;}
-    .section-result.show { opacity: 1; max-height: 200px;}
-    .section-result strong { color: var(--success-color); font-weight: 600;}
-    
-    .drug-info { background-color: var(--tertiary-bg); padding: 1rem; margin-top: 1rem; border-radius: 6px; border: 1px solid var(--border-color);}
-    .info-table { width: 100%; border-collapse: collapse; font-size: 0.9rem;}
-    .info-table tr { border-bottom: 1px solid var(--border-color);}
-    .info-table td { padding: 0.5rem 0.75rem; vertical-align: top;}
-    .info-label { font-weight: 600; color: var(--primary-text); background-color: var(--secondary-bg); border-radius: 3px; min-width: 6rem; font-size: 0.85rem;}
-    
-    /* バリデーションメッセージ */
-    .validation-message { padding: 0.6rem 0.8rem; margin: 0.5rem 0; border-radius: 4px; font-size: 0.85rem; font-weight: 500; border-left: 3px solid;}
-    .validation-message.error { background-color: var(--error-bg); color: var(--error-color); border-left-color: var(--error-color);}
-    .validation-message.warning { background-color: var(--warning-bg); color: var(--warning-color); border-left-color: var(--warning-color);}
-    
-    /* ローディングアニメーション */
-    .loading { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border-color); border-radius: 50%; border-top-color: var(--primary-blue); animation: spin 1s linear infinite; margin-right: 0.5rem;}
-    @keyframes spin { to { transform: rotate(360deg); }}
-    
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;}
-    .btn-primary { background-color: var(--primary-blue); color: white;}
-    .btn-primary:hover:not(:disabled) { background-color: var(--primary-blue-hover);}
-    .btn-primary:active:not(:disabled) { background-color: var(--primary-blue-focus);}
-    .btn:focus { outline: none; box-shadow: var(--focus-ring);}
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .container {
+        padding: 1rem 0.8rem;
+      }
+
+      .form-section {
+        padding: 1rem;
+      }
+
+      .input-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .preset-chemicals {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Print styles */
+    @media print {
+      .results-panel,
+      .toolbar,
+      .theme-toggle,
+      .keyboard-shortcuts {
+        display: none !important;
+      }
+
+      .container {
+        box-shadow: none;
+        border: 1px solid #000;
+        max-width: 100%;
+        margin: 0;
+      }
+
+      body {
+        background: white !important;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
+      <div class="theme-toggle" onclick="toggleTheme()" title="テーマ切替 (Ctrl+D)">
+        <span id="theme-icon">💊</span>
+      </div>
       <h1>
         <span class="labicon" aria-hidden="true">🧬</span>
-        YoshinovaCalc Lab V1.0
+        YoshinovaCalc Lab
+        <span class="version-badge">V2.0</span>
         <span class="labicon" aria-hidden="true">⚗️</span>
       </h1>
       <div class="copyright">
         © 2025 Fumihiko Yoshino. All Rights Reserved.
       </div>
     </header>
-    
-    <!-- 計算結果パネル -->
-    <div class="results-panel" id="results-panel">
-      <button class="minimize-btn" id="results-minimize" type="button" title="パネルを最小化">▼</button>
-      <button class="restore-btn" id="results-restore" type="button" title="パネルを復元">▲</button>
-      <div class="results-title">計算結果</div>
-      <div id="results-content">
-        <div class="results-placeholder">
-          必要項目を入力すると、ここに結果が表示されます
-        </div>
-      </div>
+
+    <div class="toolbar">
+      <button class="toolbar-btn" id="formula-btn" onclick="toggleFormula()" title="計算式表示 (Ctrl+F)">
+        📐 計算式
+      </button>
+      <button class="toolbar-btn" id="history-btn" onclick="toggleHistory()" title="履歴表示 (Ctrl+H)">
+        📋 履歴
+      </button>
+      <button class="toolbar-btn" onclick="exportResults()" title="PDF出力 (Ctrl+P)">
+        📄 PDF出力
+      </button>
+      <button class="toolbar-btn" onclick="clearAll()" title="リセット (Ctrl+R)">
+        🗑️ リセット
+      </button>
     </div>
-    <button class="show-results-btn" id="results-show" type="button" style="display:none;">計算結果を表示</button>
-    
+
     <main id="main-content">
+      <!-- よく使用される化合物のプリセット -->
+      <section class="form-section" id="section-presets">
+        <h2>
+          <div class="section-icon">⚡</div>
+          クイックプリセット
+        </h2>
+        <div class="preset-chemicals">
+          <button class="preset-btn" onclick="applyPreset('4-OH-TEMPO', 157.25)">4-OH-TEMPO</button>
+          <button class="preset-btn" onclick="applyPreset('CYPMPO', 225.32)">CYPMPO</button>
+          <button class="preset-btn" onclick="applyPreset('L-histidine', 155.15)">L-histidine</button>
+          <button class="preset-btn" onclick="applyPreset('Phloxine B', 641.83)">Phloxine B</button>
+          <button class="preset-btn" onclick="applyPreset('Rose Bengal', 1017.60)">Rose Bengal</button>
+          <button class="preset-btn" onclick="applyPreset('TEMPOL', 172.24)">TEMPOL</button>
+        </div>
+      </section>
+
       <!-- ストック溶液設定 -->
       <section class="form-section" id="section-stock" role="region" aria-labelledby="stock-heading">
         <h2 id="stock-heading">
+          <div class="section-icon">🔬</div>
           ストック溶液設定
           <span class="section-status" id="status-stock"></span>
         </h2>
@@ -206,58 +1140,73 @@
           <label for="mw" class="input-label required">分子量（g/mol）</label>
           <div class="input-row">
             <div class="input-with-status">
-              <input type="number" id="mw" step="0.01" placeholder="分子量を入力" required inputmode="decimal">
+              <div class="input-with-unit">
+                <input type="number" id="mw" step="0.01" placeholder="分子量" required inputmode="decimal" accesskey="m">
+                <span>g/mol</span>
+              </div>
               <span class="input-status" id="status-mw"></span>
+              <div class="input-error-message" id="error-mw"></div>
             </div>
           </div>
-          <small style="color: var(--muted-text); font-size: 0.8rem;">物質の分子量をg/mol単位で入力</small>
+          <small>物質の分子量をg/mol単位で入力 (Shortcut: Alt+M)</small>
         </div>
+
         <div class="input-group">
           <label for="molarity" class="input-label required">ストック溶液のモル濃度</label>
           <div class="input-row">
             <div class="input-with-status">
-              <input type="number" id="molarity" step="any" min="0" placeholder="濃度を入力" required inputmode="decimal">
+              <div class="input-with-unit">
+                <input type="number" id="molarity" step="any" min="0" placeholder="濃度" required inputmode="decimal" accesskey="c">
+                <select id="molarity_unit" aria-label="濃度の単位">
+                  <option value="1">mol/L</option>
+                  <option value="0.001">mmol/L</option>
+                  <option value="0.000001">μmol/L</option>
+                  <option value="0.000000001">nmol/L</option>
+                </select>
+              </div>
               <span class="input-status" id="status-molarity"></span>
+              <div class="input-error-message" id="error-molarity"></div>
             </div>
-            <select id="molarity_unit" aria-label="濃度の単位">
-              <option value="1">mol/L</option>
-              <option value="0.001">mmol/L</option>
-              <option value="0.000001">μmol/L</option>
-              <option value="0.000000001">nmol/L</option>
-            </select>
           </div>
-          <small style="color: var(--muted-text); font-size: 0.8rem;">調製したいストック溶液の濃度を入力</small>
+          <small>調製したいストック溶液の濃度を入力 (Shortcut: Alt+C)</small>
         </div>
+
         <div class="input-group">
           <label for="volume" class="input-label required">ストック溶液量</label>
           <div class="input-row">
             <div class="input-with-status">
-              <input type="number" id="volume" step="any" min="0" placeholder="調製量を入力" required inputmode="decimal">
+              <div class="input-with-unit">
+                <input type="number" id="volume" step="any" min="0" placeholder="調製量" required inputmode="decimal" accesskey="v">
+                <select id="volume_unit" aria-label="体積の単位">
+                  <option value="0.001">mL</option>
+                  <option value="1">L</option>
+                </select>
+              </div>
               <span class="input-status" id="status-volume"></span>
+              <div class="input-error-message" id="error-volume"></div>
             </div>
-            <select id="volume_unit" aria-label="体積の単位">
-              <option value="0.001">mL</option>
-              <option value="1">L</option>
-            </select>
           </div>
-          <small style="color: var(--muted-text); font-size: 0.8rem;">調製したいストック溶液の総量を入力</small>
+          <small>調製したいストック溶液の総量を入力 (Shortcut: Alt+V)</small>
         </div>
+
         <div class="input-group">
           <label for="mass_unit" class="input-label">表示単位（必要な薬量）</label>
           <div class="input-row">
-            <select id="mass_unit" aria-label="質量の表示単位">
-              <option value="g">g</option>
+            <select id="mass_unit" aria-label="質量の表示単位" style="width:7em;">
               <option value="mg">mg</option>
+              <option value="g">g</option>
               <option value="μg">μg</option>
             </select>
           </div>
         </div>
+
         <div id="section-result-stock" class="section-result"></div>
       </section>
-      
+
       <!-- 希釈計算 -->
       <section class="form-section" id="section-dilution" role="region" aria-labelledby="dilution-heading">
         <h2 id="dilution-heading">
+          <div class="section-icon">💧</div>
           希釈計算（任意）
           <span class="section-status" id="status-dilution"></span>
         </h2>
@@ -265,461 +1214,848 @@
           <label for="final_molarity" class="input-label">実験での最終濃度</label>
           <div class="input-row">
             <div class="input-with-status">
-              <input type="number" id="final_molarity" step="any" min="0" placeholder="例: 5" inputmode="decimal">
+              <div class="input-with-unit">
+                <input type="number" id="final_molarity" step="any" min="0" placeholder="例: 5" inputmode="decimal" accesskey="f">
+                <select id="final_molarity_unit" aria-label="最終濃度の単位">
+                  <option value="1">mol/L</option>
+                  <option value="0.001">mmol/L</option>
+                  <option value="0.000001">μmol/L</option>
+                  <option value="0.000000001">nmol/L</option>
+                </select>
+              </div>
               <span class="input-status" id="status-final-molarity"></span>
+              <div class="input-error-message" id="error-final-molarity"></div>
             </div>
-            <select id="final_molarity_unit" aria-label="最終濃度の単位">
-              <option value="1">mol/L</option>
-              <option value="0.001">mmol/L</option>
-              <option value="0.000001">μmol/L</option>
-              <option value="0.000000001">nmol/L</option>
-            </select>
           </div>
-          <small style="color: var(--muted-text); font-size: 0.8rem;">実験で使用したい最終濃度を入力</small>
+          <small>実験で使用したい最終濃度を入力 (Shortcut: Alt+F)</small>
         </div>
+
         <div class="input-group">
           <label for="final_total_vol" class="input-label">希釈後総量（溶媒＋サンプル）</label>
           <div class="input-row">
             <div class="input-with-status">
-              <input type="number" id="final_total_vol" step="any" min="0" placeholder="例: 100" inputmode="decimal">
+              <div class="input-with-unit">
+                <input type="number" id="final_total_vol" step="any" min="0" placeholder="例: 100" inputmode="decimal" accesskey="t">
+                <select id="final_total_vol_unit" aria-label="希釈後総量の単位">
+                  <option value="0.001">μL</option>
+                  <option value="1">mL</option>
+                </select>
+              </div>
               <span class="input-status" id="status-final-volume"></span>
+              <div class="input-error-message" id="error-final-total-vol"></div>
             </div>
-            <select id="final_total_vol_unit" aria-label="希釈後総量の単位">
-              <option value="0.001">μL</option>
-              <option value="1">mL</option>
-            </select>
           </div>
-          <small style="color: var(--muted-text); font-size: 0.8rem;">
-            溶媒にストック溶液を添加した後の最終総液量を入力
-          </small>
+          <small>溶媒にストック溶液を添加した後の最終総液量を入力 (Shortcut: Alt+T)</small>
         </div>
+
         <div id="section-result-dilution" class="section-result"></div>
       </section>
-      
-      <!-- CID検索セクション（下部に移動） -->
+
+      <!-- CID検索セクション -->
       <section class="form-section" id="section-search" role="region" aria-labelledby="search-heading">
         <h2 id="search-heading">
+          <div class="section-icon">🔍</div>
           薬物情報検索（CIDコード）
           <span class="section-status" id="status-search"></span>
         </h2>
         <div class="input-group">
           <label for="cid" class="input-label">CIDコード</label>
           <div class="input-row">
-            <div class="input-with-status">
-              <input type="text" id="cid" autocomplete="off" placeholder="例: 54670067" aria-describedby="cid-help">
+            <div class="input-with-status" style="flex-direction: column;">
+              <input type="text" id="cid" autocomplete="off" placeholder="例: 54670067" aria-describedby="cid-help" accesskey="s">
               <span class="input-status" id="status-cid"></span>
+              <div class="input-error-message" id="error-cid"></div>
             </div>
-            <button class="btn btn-primary" type="button" onclick="fetchPubChem()"><span id="search-text">検索</span></button>
+            <button class="btn btn-primary" type="button" onclick="fetchPubChem()">
+              <span id="search-text">検索</span>
+            </button>
           </div>
-          <small id="cid-help" style="color: var(--muted-text); font-size: 0.8rem;">
-            PubChemのCompound IDを入力（ハイフンは削除して入力してください。なお、薬物情報が自動取得できない場合は分子量を手入力してください）
-          </small>
+          <small id="cid-help">PubChemのCompound IDを入力 (Shortcut: Alt+S)</small>
         </div>
         <div id="drug_info" class="drug-info" style="display:none;" role="region" aria-labelledby="drug-info-heading">
           <h3 id="drug-info-heading" class="sr-only">取得した薬物情報</h3>
         </div>
       </section>
-      
-      <!-- バリデーションメッセージ -->
-      <div id="validation-messages"></div>
+
+      <!-- 計算式表示エリア -->
+      <div id="formula-display" class="formula-display" style="display:none;">
+        <h3>💡 計算式</h3>
+        <div id="formula-content"></div>
+      </div>
+
+      <!-- 履歴表示エリア -->
+      <div id="history-panel" class="history-panel" style="display:none;">
+        <h3>📋 計算履歴</h3>
+        <div id="history-content"></div>
+        <button class="btn btn-secondary" onclick="clearHistory()" style="width: 100%; margin-top: 1rem;">
+          履歴をクリア
+        </button>
+      </div>
     </main>
+  </div>
+
+  <!-- 計算結果パネル：PC右上/スマホ下部に追従 -->
+  <div class="results-panel" id="results-panel">
+    <div class="results-title">⚗️ 計算結果</div>
+    <div id="results-content">
+      <div class="results-placeholder">
+        必要項目を入力すると、ここに結果が表示されます
+      </div>
+    </div>
+  </div>
+
+  <!-- キーボードショートカット表示 -->
+  <div class="keyboard-shortcuts">
+    💡 Ctrl+D: テーマ切替 | Ctrl+F: 計算式 | Ctrl+H: 履歴 | Ctrl+R: リセット
   </div>
 
 <script>
 // グローバル変数
 let currentValidation = { warnings: [], errors: [] };
+let calculationHistory = JSON.parse(localStorage.getItem('molarity-calc-history') || '[]');
+let isDarkMode = localStorage.getItem('theme') === 'dark';
+let activeStates = {
+  formula: false,
+  history: false
+};
 
-// ステータス更新関数
+// 初期化
+document.addEventListener('DOMContentLoaded', function() {
+  if (isDarkMode) {
+    document.body.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-icon').textContent = '🔬';
+  }
+  loadHistory();
+  setupKeyboardShortcuts();
+});
+
+// ダークモード切替
+function toggleTheme() {
+  isDarkMode = !isDarkMode;
+  if (isDarkMode) {
+    document.body.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-icon').textContent = '🔬';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.body.removeAttribute('data-theme');
+    document.getElementById('theme-icon').textContent = '💊';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// キーボードショートカット設定
+function setupKeyboardShortcuts() {
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+      switch(e.key) {
+        case 'd':
+          e.preventDefault();
+          toggleTheme();
+          break;
+        case 'f':
+          e.preventDefault();
+          toggleFormula();
+          break;
+        case 'h':
+          e.preventDefault();
+          toggleHistory();
+          break;
+        case 'r':
+          e.preventDefault();
+          clearAll();
+          break;
+        case 'p':
+          e.preventDefault();
+          exportResults();
+          break;
+      }
+    }
+  });
+}
+
+// プリセット適用
+function applyPreset(name, mw) {
+  document.getElementById('mw').value = mw;
+  updateMainResults();
+  showFloatingNotification(`${name} (MW: ${mw}) がセットされました`, 'success');
+}
+
+// 🎯 改善された通知システム
+function showFloatingNotification(message, type = 'info', duration = 3000) {
+  const notification = document.createElement('div');
+  notification.className = `floating-notification ${type}`;
+  
+  const icon = type === 'error' ? '⚠️' : type === 'warning' ? '💡' : '✅';
+  notification.innerHTML = `<span style="font-size: 1.2rem;">${icon}</span><span>${message}</span>`;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateX(100px)';
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        document.body.removeChild(notification);
+      }
+    }, 300);
+  }, duration);
+}
+
+// 計算式表示切替（アクティブ状態管理付き）
+function toggleFormula() {
+  const formulaDisplay = document.getElementById('formula-display');
+  const formulaBtn = document.getElementById('formula-btn');
+  const formulaContent = document.getElementById('formula-content');
+  
+  activeStates.formula = !activeStates.formula;
+  
+  if (activeStates.formula) {
+    formulaContent.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <strong>ストック溶液調製:</strong><br>
+
+
+        $$\\text{必要薬量 (g)} = \\text{分子量} \\times \\text{モル濃度} \\times \\text{体積 (L)}$$
+      </div>
+      <div style="margin-bottom: 1rem;">
+        <strong>希釈計算 (C₁V₁ = C₂V₂):</strong><br>
+
+
+        $$V_1 = \\frac{C_2 \\times V_2}{C_1}$$
+        <br><small>V₁: 必要なストック溶液量, C₁: ストック濃度, C₂: 最終濃度, V₂: 最終体積</small>
+      </div>
+      <div>
+        <strong>希釈倍率:</strong><br>
+
+
+        $$\\text{希釈倍率} = \\frac{C_1}{C_2}$$
+      </div>
+    `;
+    formulaDisplay.style.display = 'block';
+    formulaBtn.classList.add('active');
+  } else {
+    formulaDisplay.style.display = 'none';
+    formulaBtn.classList.remove('active');
+  }
+}
+
+// 履歴表示切替（アクティブ状態管理付き）
+function toggleHistory() {
+  const historyPanel = document.getElementById('history-panel');
+  const historyBtn = document.getElementById('history-btn');
+  
+  activeStates.history = !activeStates.history;
+  
+  if (activeStates.history) {
+    loadHistory();
+    historyPanel.style.display = 'block';
+    historyBtn.classList.add('active');
+  } else {
+    historyPanel.style.display = 'none';
+    historyBtn.classList.remove('active');
+  }
+}
+
+// 旧showFormula関数との互換性のため
+function showFormula() {
+  if (!activeStates.formula) {
+    toggleFormula();
+  }
+}
+
+// 履歴保存
+function saveToHistory() {
+  const mw = parseFloat(document.getElementById('mw').value);
+  const molarity = parseFloat(document.getElementById('molarity').value);
+  const volume = parseFloat(document.getElementById('volume').value);
+  
+  if (!isNaN(mw) && !isNaN(molarity) && !isNaN(volume)) {
+    const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
+    const volume_unit = parseFloat(document.getElementById('volume_unit').value);
+    const mass_mg = mw * molarity * molarity_unit * volume * volume_unit * 1000;
+    
+    const historyItem = {
+      timestamp: new Date().toLocaleString('ja-JP'),
+      mw: mw,
+      molarity: molarity,
+      molarity_unit: document.getElementById('molarity_unit').options[document.getElementById('molarity_unit').selectedIndex].text,
+      volume: volume,
+      volume_unit: document.getElementById('volume_unit').options[document.getElementById('volume_unit').selectedIndex].text,
+      mass_mg: mass_mg
+    };
+    
+    calculationHistory.unshift(historyItem);
+    if (calculationHistory.length > 10) {
+      calculationHistory.pop();
+    }
+    
+    localStorage.setItem('molarity-calc-history', JSON.stringify(calculationHistory));
+  }
+}
+
+// 履歴読み込み
+function loadHistory() {
+  const historyContent = document.getElementById('history-content');
+  if (calculationHistory.length === 0) {
+    historyContent.innerHTML = '<p style="text-align: center; color: var(--muted-text);">履歴がありません</p>';
+    return;
+  }
+  
+  let historyHTML = '';
+  calculationHistory.forEach((item, index) => {
+    historyHTML += `
+      <div class="history-item" onclick="loadFromHistory(${index})">
+        <div style="font-size: 0.8rem; color: var(--muted-text);">${item.timestamp}</div>
+        <div><strong>MW:</strong> ${item.mw} g/mol</div>
+        <div><strong>濃度:</strong> ${item.molarity} ${item.molarity_unit}</div>
+        <div><strong>体積:</strong> ${item.volume} ${item.volume_unit}</div>
+        <div><strong>必要薬量:</strong> ${formatNumber(item.mass_mg)} mg</div>
+      </div>
+    `;
+  });
+  
+  historyContent.innerHTML = historyHTML;
+}
+
+// 履歴から読み込み
+function loadFromHistory(index) {
+  const item = calculationHistory[index];
+  document.getElementById('mw').value = item.mw;
+  document.getElementById('molarity').value = item.molarity;
+  
+  // 単位の設定
+  const molarityUnit = document.getElementById('molarity_unit');
+  for (let i = 0; i < molarityUnit.options.length; i++) {
+    if (molarityUnit.options[i].text === item.molarity_unit) {
+      molarityUnit.selectedIndex = i;
+      break;
+    }
+  }
+  
+  const volumeUnit = document.getElementById('volume_unit');
+  for (let i = 0; i < volumeUnit.options.length; i++) {
+    if (volumeUnit.options[i].text === item.volume_unit) {
+      volumeUnit.selectedIndex = i;
+      break;
+    }
+  }
+  
+  document.getElementById('volume').value = item.volume;
+  
+  updateMainResults();
+  toggleHistory();
+  showFloatingNotification('履歴から読み込みました', 'success');
+}
+
+// 履歴クリア
+function clearHistory() {
+  if (confirm('履歴をすべて削除しますか？')) {
+    calculationHistory = [];
+    localStorage.removeItem('molarity-calc-history');
+    loadHistory();
+    showFloatingNotification('履歴をクリアしました', 'success');
+  }
+}
+
+// 全クリア
+function clearAll() {
+  if (confirm('すべての入力をクリアしますか？')) {
+    document.getElementById('mw').value = '';
+    document.getElementById('molarity').value = '';
+    document.getElementById('volume').value = '';
+    document.getElementById('final_molarity').value = '';
+    document.getElementById('final_total_vol').value = '';
+    document.getElementById('cid').value = '';
+    document.getElementById('drug_info').style.display = 'none';
+    
+    // アクティブ状態もリセット
+    if (activeStates.formula) toggleFormula();
+    if (activeStates.history) toggleHistory();
+    
+    updateMainResults();
+    showFloatingNotification('すべてクリアしました', 'success');
+  }
+}
+
+// 結果エクスポート
+function exportResults() {
+  const mw = parseFloat(document.getElementById('mw').value);
+  const molarity = parseFloat(document.getElementById('molarity').value);
+  const volume = parseFloat(document.getElementById('volume').value);
+  
+  if (isNaN(mw) || isNaN(molarity) || isNaN(volume)) {
+    showFloatingNotification('計算結果がありません', 'error');
+    return;
+  }
+  
+  // PDFエクスポートをシミュレート（実際の実装ではPDF.jsなどを使用）
+  const results = document.getElementById('results-content').innerHTML;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>YoshinovaCalc Lab 計算結果</title>
+        <style>
+          body { font-family: 'Inter', sans-serif; margin: 20px; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .results { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>🧬 YoshinovaCalc Lab V2.0 🧬</h1>
+          <p>計算結果 - ${new Date().toLocaleString('ja-JP')}</p>
+        </div>
+        <div class="results">
+          ${results}
+        </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
+}
+
+// 🎯 大幅に改善されたエラー・ステータス管理関数
+function setInputError(inputId, message, isWarning = false) {
+  const errorEl = document.getElementById('error-' + inputId.replace('_','-'));
+  const inputEl = document.getElementById(inputId);
+  
+  if (errorEl) {
+    errorEl.textContent = message || '';
+    errorEl.className = isWarning ? 'input-warning-message' : 'input-error-message';
+    
+    // メッセージが追加/変更された時のアニメーション効果
+    if (message) {
+      errorEl.style.animation = 'none';
+      errorEl.offsetHeight; // リフロー強制
+      errorEl.style.animation = 'bounceIn 0.4s ease-out';
+    }
+  }
+  
+  if (inputEl) {
+    inputEl.classList.remove('invalid', 'warning', 'valid');
+    if (message) {
+      inputEl.classList.add(isWarning ? 'warning' : 'invalid');
+    }
+  }
+  
+  // セクション全体の状態更新
+  updateSectionVisualState(inputId, message, isWarning);
+}
+
+function updateSectionVisualState(inputId, hasMessage, isWarning) {
+  const sectionMap = {
+    'mw': 'stock',
+    'molarity': 'stock', 
+    'volume': 'stock',
+    'final_molarity': 'dilution',
+    'final_total_vol': 'dilution'
+  };
+  
+  const sectionName = sectionMap[inputId];
+  if (!sectionName) return;
+  
+  const sectionEl = document.getElementById(`section-${sectionName}`);
+  if (!sectionEl) return;
+  
+  // セクション内のすべてのエラー/警告をチェック
+  const hasErrors = sectionEl.querySelector('.input-error-message:not(:empty)');
+  const hasWarnings = sectionEl.querySelector('.input-warning-message:not(:empty)');
+  
+  sectionEl.classList.remove('has-errors', 'has-warnings');
+  
+  if (hasErrors) {
+    sectionEl.classList.add('has-errors');
+  } else if (hasWarnings) {
+    sectionEl.classList.add('has-warnings');
+  }
+}
+
 function updateInputStatus(inputId, isValid, isEmpty = false) {
-    const statusEl = document.getElementById(`status-${inputId.replace('_', '-')}`);
-    const inputEl = document.getElementById(inputId);
-    
-    if (!statusEl || !inputEl) return;
-    
-    if (isEmpty) {
-        statusEl.textContent = '';
-        inputEl.className = inputEl.className.replace(/\s*(valid|invalid)/, '');
-    } else if (isValid) {
-        statusEl.textContent = '✓';
-        statusEl.style.color = 'var(--success-color)';
-        inputEl.className = inputEl.className.replace(/\s*(valid|invalid)/, '') + ' valid';
-    } else {
-        statusEl.textContent = '⚠';
-        statusEl.style.color = 'var(--error-color)';
-        inputEl.className = inputEl.className.replace(/\s*(valid|invalid)/, '') + ' invalid';
-    }
+  const statusEl = document.getElementById(`status-${inputId.replace('_', '-')}`);
+  const inputEl = document.getElementById(inputId);
+  if (!statusEl || !inputEl) return;
+  
+  if (isEmpty) {
+    statusEl.textContent = '';
+    inputEl.className = inputEl.className.replace(/\s*(valid|invalid|warning)/, '');
+  } else if (isValid) {
+    statusEl.textContent = '✓';
+    statusEl.style.color = 'var(--success-color)';
+    inputEl.className = inputEl.className.replace(/\s*(valid|invalid|warning)/, '') + ' valid';
+  } else {
+    statusEl.textContent = '⚠';
+    statusEl.style.color = 'var(--error-color)';
+    inputEl.className = inputEl.className.replace(/\s*(valid|invalid|warning)/, '') + ' invalid';
+  }
 }
 
-// セクションステータス更新関数
 function updateSectionStatus(sectionId, status) {
-    const statusEl = document.getElementById(`status-${sectionId}`);
-    const sectionEl = document.getElementById(`section-${sectionId}`);
-    
-    if (!statusEl || !sectionEl) return;
-    
-    statusEl.className = 'section-status ' + status;
-    
-    if (status === 'completed') {
-        statusEl.textContent = '完了';
-        sectionEl.classList.add('completed');
-    } else if (status === 'error') {
-        statusEl.textContent = 'エラー';
-        sectionEl.classList.remove('completed');
-    } else {
-        statusEl.textContent = '';
-        sectionEl.classList.remove('completed');
-    }
+  const statusEl = document.getElementById(`status-${sectionId}`);
+  const sectionEl = document.getElementById(`section-${sectionId}`);
+  if (!statusEl || !sectionEl) return;
+  
+  statusEl.className = 'section-status ' + status;
+  if (status === 'completed') {
+    statusEl.textContent = '完了';
+    sectionEl.classList.add('completed');
+  } else if (status === 'error') {
+    statusEl.textContent = 'エラー';
+    sectionEl.classList.remove('completed');
+  } else if (status === 'warning') {
+    statusEl.textContent = '注意';
+    sectionEl.classList.remove('completed');
+  } else {
+    statusEl.textContent = '';
+    sectionEl.classList.remove('completed');
+  }
 }
 
-// バリデーション関数
+function formatMassCustomUnit(value_mg, selectedUnit) {
+  if (selectedUnit === "mg") {
+    return `${formatNumber(value_mg)} mg`;
+  } else if (selectedUnit === "g") {
+    return `${formatNumber(value_mg / 1000)} g`;
+  } else if (selectedUnit === "μg") {
+    return `${formatNumber(value_mg * 1000)} μg`;
+  } else {
+    return `${formatNumber(value_mg)} mg`;
+  }
+}
+
 function validateInputs() {
-    const warnings = [];
-    const errors = [];
-    
-    const mw = parseFloat(document.getElementById('mw').value);
-    const molarity = parseFloat(document.getElementById('molarity').value);
-    const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
-    const volume = parseFloat(document.getElementById('volume').value);
-    const volume_unit = parseFloat(document.getElementById('volume_unit').value);
-    
-    const final_molarity = parseFloat(document.getElementById('final_molarity').value);
-    const final_molarity_unit = parseFloat(document.getElementById('final_molarity_unit').value);
-    const final_total_vol = parseFloat(document.getElementById('final_total_vol').value);
-    const final_total_vol_unit = parseFloat(document.getElementById('final_total_vol_unit').value);
-
-    // 個別入力検証とステータス更新
-    const mwValid = !isNaN(mw) && mw > 0;
-    const molarityValid = !isNaN(molarity) && molarity > 0;
-    const volumeValid = !isNaN(volume) && volume > 0;
-    const finalMolarityValid = document.getElementById('final_molarity').value === '' || (!isNaN(final_molarity) && final_molarity > 0);
-    const finalVolumeValid = document.getElementById('final_total_vol').value === '' || (!isNaN(final_total_vol) && final_total_vol > 0);
-    
-    updateInputStatus('mw', mwValid, !document.getElementById('mw').value);
-    updateInputStatus('molarity', molarityValid, !document.getElementById('molarity').value);
-    updateInputStatus('volume', volumeValid, !document.getElementById('volume').value);
-    updateInputStatus('final-molarity', finalMolarityValid, !document.getElementById('final_molarity').value);
-    updateInputStatus('final-volume', finalVolumeValid, !document.getElementById('final_total_vol').value);
-
-    // 分子量チェック
-    if (mwValid) {
-        if (mw < 10) {
-            warnings.push("分子量が10未満です。低分子化合物でも通常10以上です。入力値を確認してください。");
-        } else if (mw > 2000 && mw <= 10000) {
-            warnings.push("分子量が2000を超えています。ペプチドや大分子化合物ですか？溶解性にご注意ください。");
-        } else if (mw > 10000) {
-            warnings.push("分子量が10000を超えています。タンパク質などの巨大分子ですね。特殊な溶解条件が必要かもしれません。");
+  const warnings = [];
+  const errors = [];
+  
+  // 全エラーメッセージをクリア
+  ['mw','molarity','volume','final-molarity','final-total-vol'].forEach(id => setInputError(id, ""));
+  
+  const mw = parseFloat(document.getElementById('mw').value);
+  const molarity = parseFloat(document.getElementById('molarity').value);
+  const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
+  const volume = parseFloat(document.getElementById('volume').value);
+  const volume_unit = parseFloat(document.getElementById('volume_unit').value);
+  const final_molarity = parseFloat(document.getElementById('final_molarity').value);
+  const final_molarity_unit = parseFloat(document.getElementById('final_molarity_unit').value);
+  const final_total_vol = parseFloat(document.getElementById('final_total_vol').value);
+  const final_total_vol_unit = parseFloat(document.getElementById('final_total_vol_unit').value);
+  
+  const mwValid = !isNaN(mw) && mw > 0;
+  const molarityValid = !isNaN(molarity) && molarity > 0;
+  const volumeValid = !isNaN(volume) && volume > 0;
+  const finalMolarityValid = document.getElementById('final_molarity').value === '' || (!isNaN(final_molarity) && final_molarity > 0);
+  const finalVolumeValid = document.getElementById('final_total_vol').value === '' || (!isNaN(final_total_vol) && final_total_vol > 0);
+  
+  // 分子量のバリデーション
+  if (!mwValid && document.getElementById('mw').value !== "") {
+    setInputError('mw', '分子量を正しく入力してください');
+    errors.push("分子量が正しく入力されていません。");
+  } else if (mwValid && mw < 10) {
+    setInputError('mw', '分子量が10未満です。入力値を確認！', true);
+    warnings.push("分子量が10未満です。低分子化合物でも通常10以上です。入力値を確認してください。");
+  } else if (mwValid && mw > 2000 && mw <= 10000) {
+    setInputError('mw', '分子量が2000を超えています。溶解性に注意', true);
+    warnings.push("分子量が2000を超えています。ペプチドや大分子化合物ですか？溶解性にご注意ください。");
+  } else if (mwValid && mw > 10000) {
+    setInputError('mw', '分子量が10000を超えています。特殊な溶解条件かも', true);
+    warnings.push("分子量が10000を超えています。タンパク質などの巨大分子ですね。特殊な溶解条件が必要かもしれません。");
+  }
+  
+  // ストック濃度のバリデーション
+  if (!molarityValid && document.getElementById('molarity').value !== "") {
+    setInputError('molarity', '濃度を正しく入力してください');
+    errors.push("濃度が正しく入力されていません。");
+  } else if (molarityValid && molarity_unit > 0) {
+    const stock_conc_molL = molarity * molarity_unit;
+    if (stock_conc_molL > 1) {
+      setInputError('molarity', '1M超の高濃度。溶解度に注意', true);
+      warnings.push("ストック濃度が1 M を超えています。溶解度は大丈夫ですか？高濃度では沈殿のリスクがあります。");
+    } else if (stock_conc_molL > 0.1) {
+      setInputError('molarity', '100mM超。完全溶解を確認', true);
+      warnings.push("ストック濃度が100 mM を超えています。完全溶解を確認してから使用してください。");
+    } else if (stock_conc_molL < 1e-9) {
+      setInputError('molarity', '1nM未満。精度に注意', true);
+      warnings.push("ストック濃度が極めて低いです（1 nM未満）。希釈精度が問題になる可能性があります。");
+    }
+  }
+  
+  // 体積のバリデーション
+  if (!volumeValid && document.getElementById('volume').value !== "") {
+    setInputError('volume', '調製量を正しく入力してください');
+    errors.push("調製量が正しく入力されていません。");
+  } else if (volumeValid && volume_unit > 0) {
+    const total_vol_ul = volume * (volume_unit === 1 ? 1e6 : 1e3);
+    if (total_vol_ul < 10) {
+      setInputError('volume', '10μL未満。調製困難', false);
+      errors.push("調製量が10μL未満です。実際の調製は困難です。より大きな量での調製を推奨します。");
+    } else if (total_vol_ul < 100) {
+      setInputError('volume', '100μL未満。ピペット精度に注意', true);
+      warnings.push("調製量が100μL未満です。ピペッティング精度にご注意ください。マイクロピペットの使用を推奨します。");
+    } else if (total_vol_ul > 1e9) {
+      setInputError('volume', '1L超。単位ミス注意', true);
+      warnings.push("調製量が非現実的に大きいです（1 L超）。単位を確認してください。");
+    }
+  }
+  
+  // 🎯 希釈関連のバリデーション（修正版）
+  const finalMolarityInput = document.getElementById('final_molarity').value;
+  const finalVolumeInput = document.getElementById('final_total_vol').value;
+  const bothFieldsEmpty = finalMolarityInput === '' && finalVolumeInput === '';
+  const bothFieldsFilled = finalMolarityInput !== '' && finalVolumeInput !== '';
+  const onlyOneFieldFilled = (finalMolarityInput !== '' && finalVolumeInput === '') || 
+                             (finalMolarityInput === '' && finalVolumeInput !== '');
+  
+  if (onlyOneFieldFilled) {
+    // どちらか片方だけ入力された場合はエラー
+    if (finalMolarityInput !== '' && finalVolumeInput === '') {
+      setInputError('final-total-vol', '希釈後総量も入力してください', false);
+      errors.push("希釈計算には最終濃度と希釈後総量の両方が必要です。");
+    }
+    if (finalMolarityInput === '' && finalVolumeInput !== '') {
+      setInputError('final-molarity', '最終濃度も入力してください', false);
+      errors.push("希釈計算には最終濃度と希釈後総量の両方が必要です。");
+    }
+  } else if (bothFieldsFilled) {
+    // 両方入力された場合の詳細バリデーション
+    if (!finalMolarityValid) {
+      setInputError('final-molarity', '最終濃度を正しく入力');
+      errors.push("最終濃度が正しく入力されていません。");
+    } else if (!finalVolumeValid) {
+      setInputError('final-total-vol', '希釈後総量を正しく入力');
+      errors.push("希釈後総量が正しく入力されていません。");
+    } else if (finalMolarityValid && molarityValid && molarity > 0) {
+      const stock_conc = molarity * molarity_unit;
+      const final_conc = final_molarity * final_molarity_unit;
+      if (final_conc >= stock_conc) {
+        setInputError('final-molarity', 'ストック濃度未満で入力', false);
+        errors.push("最終濃度がストック濃度以上です。希釈では実現できません。ストック濃度を上げるか最終濃度を下げてください。");
+      } else {
+        const dilution_factor = stock_conc / final_conc;
+        if (dilution_factor > 10000) {
+          setInputError('final-molarity', '希釈倍率1万倍超。段階希釈推奨', true);
+          warnings.push("希釈倍率が1万倍を超えています。段階希釈を検討してください。精度が低下する可能性があります。");
+        } else if (dilution_factor < 2) {
+          setInputError('final-molarity', '2倍未満。ストック濃度見直し推奨', true);
+          warnings.push("希釈倍率が2倍未満です。もう少し濃いストック溶液の方が良いかもしれません。");
         }
+      }
     }
     
-    // ストック濃度チェック
-    if (molarityValid && molarity_unit > 0) {
-        const stock_conc_molL = molarity * molarity_unit;
-        if (stock_conc_molL > 1) {
-            warnings.push("ストック濃度が1 M を超えています。溶解度は大丈夫ですか？高濃度では沈殿のリスクがあります。");
-        } else if (stock_conc_molL > 0.1) {
-            warnings.push("ストック濃度が100 mM を超えています。完全溶解を確認してから使用してください。");
-        }
-        if (stock_conc_molL < 1e-9) {
-            warnings.push("ストック濃度が極めて低いです（1 nM未満）。希釈精度が問題になる可能性があります。");
-        }
+    // ピペッティング精度のバリデーション
+    if (finalMolarityValid && final_molarity > 0 && finalVolumeValid && final_total_vol > 0 && molarityValid && molarity > 0) {
+      const C1 = molarity * molarity_unit;
+      const C2 = final_molarity * final_molarity_unit;
+      const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1);
+      const V1 = (C2 * V2 / 1e6) / C1 * 1e6;
+      if (V1 < 0.1) {
+        setInputError('final-molarity', 'ストック溶液の必要量が0.1μL未満。精度不可', false);
+        errors.push("必要なストック溶液量が0.1μL未満です。正確なピペッティングは不可能です。ストック濃度を下げてください。");
+      } else if (V1 < 1) {
+        setInputError('final-molarity', '1μL未満。高精度ピペット必要', true);
+        warnings.push("必要なストック溶液量が1μL未満です。高精度ピペット（0.1-2μL用）が必要です。");
+      }
     }
-    
-    // 調製量チェック
-    if (volumeValid && volume_unit > 0) {
-        const total_vol_ul = volume * (volume_unit === 1 ? 1e6 : 1e3);
-        if (total_vol_ul < 10) {
-            errors.push("調製量が10μL未満です。実際の調製は困難です。より大きな量での調製を推奨します。");
-        } else if (total_vol_ul < 100) {
-            warnings.push("調製量が100μL未満です。ピペッティング精度にご注意ください。マイクロピペットの使用を推奨します。");
-        }
-        if (total_vol_ul > 1e9) {
-            warnings.push("調製量が非現実的に大きいです（1 L超）。単位を確認してください。");
-        }
+  }
+  // bothFieldsEmpty の場合は何もしない（任意なので）
+  
+  // 必要薬量の計算とバリデーション
+  if (mwValid && molarityValid && volumeValid) {
+    const molarity_molL = molarity * molarity_unit;
+    const volume_L = volume * volume_unit;
+    const mass_mg = mw * molarity_molL * volume_L * 1000;
+    if (mass_mg < 0.1) {
+      setInputError('mw', '必要薬量が0.1mg未満。天秤精度不可', false);
+      errors.push("必要な薬量が0.1mg未満です。分析天秤でも正確な秤量は困難です。濃度を下げるか量を増やしてください。");
+    } else if (mass_mg < 1) {
+      setInputError('mw', '必要薬量が1mg未満。マイクロ天秤推奨', true);
+      warnings.push("必要な薬量が1mg未満です。マイクロ天秤または母液調製法（高濃度で少量調製後希釈）を推奨します。");
+    } else if (mass_mg > 1000) {
+      setInputError('mw', '必要薬量が1g超。溶解・容器注意', true);
+      warnings.push("必要な薬量が1gを超えています。容器サイズと溶解時間にご注意ください。段階的に溶解することを推奨します。");
     }
-
-    // 希釈計算のチェック
-    if (finalMolarityValid && final_molarity > 0 && molarityValid && molarity > 0) {
-        const stock_conc = molarity * molarity_unit;
-        const final_conc = final_molarity * final_molarity_unit;
-        
-        if (final_conc >= stock_conc) {
-            errors.push("最終濃度がストック濃度以上です。希釈では実現できません。ストック濃度を上げるか最終濃度を下げてください。");
-        }
-        
-        if (final_conc < stock_conc) {
-            const dilution_factor = stock_conc / final_conc;
-            if (dilution_factor > 10000) {
-                warnings.push("希釈倍率が1万倍を超えています。段階希釈を検討してください。精度が低下する可能性があります。");
-            } else if (dilution_factor < 2) {
-                warnings.push("希釈倍率が2倍未満です。もう少し濃いストック溶液の方が良いかもしれません。");
-            }
-        }
-    }
-    
-    // ピペッティング量のチェック
-    if (finalMolarityValid && final_molarity > 0 && 
-        finalVolumeValid && final_total_vol > 0 &&
-        molarityValid && molarity > 0) {
-        
-        const C1 = molarity * molarity_unit;
-        const C2 = final_molarity * final_molarity_unit;
-        const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1);
-        const V1 = (C2 * V2 / 1e6) / C1 * 1e6;
-        
-        if (V1 < 0.1) {
-            errors.push("必要なストック溶液量が0.1μL未満です。正確なピペッティングは不可能です。ストック濃度を下げてください。");
-        } else if (V1 < 1) {
-            warnings.push("必要なストック溶液量が1μL未満です。高精度ピペット（0.1-2μL用）が必要です。");
-        }
-        
-        if (V1 > V2 * 0.9) {
-            warnings.push("ストック溶液の添加量が最終液量の90%を超えています。溶媒効果にご注意ください。");
-        }
-        
-        if (volumeValid && volume > 0) {
-            const stock_vol_ul = volume * (volume_unit === 1 ? 1e6 : 1e3);
-            if (V1 > stock_vol_ul) {
-                errors.push("必要なストック溶液量が調製量を超えています。ストック溶液をもっと作る必要があります。");
-            } else if (V1 > stock_vol_ul * 0.8) {
-                warnings.push("ストック溶液の80%以上を使用します。予備分を考慮して追加調製を推奨します。");
-            }
-        }
-    }
-    
-    // 薬量チェック
-    if (mwValid && molarityValid && volumeValid) {
-        const molarity_molL = molarity * molarity_unit;
-        const volume_L = volume * volume_unit;
-        const mass_mg = mw * molarity_molL * volume_L * 1000;
-        
-        if (mass_mg < 0.1) {
-            errors.push("必要な薬量が0.1mg未満です。分析天秤でも正確な秤量は困難です。濃度を下げるか量を増やしてください。");
-        } else if (mass_mg < 1) {
-            warnings.push("必要な薬量が1mg未満です。マイクロ天秤または母液調製法（高濃度で少量調製後希釈）を推奨します。");
-        } else if (mass_mg > 1000) {
-            warnings.push("必要な薬量が1gを超えています。容器サイズと溶解時間にご注意ください。段階的に溶解することを推奨します。");
-        }
-    }
-    
-    // セクションステータス更新
-    const stockValid = mwValid && molarityValid && volumeValid;
-    const stockHasErrors = errors.some(error => 
-        error.includes('調製量') || error.includes('薬量') || error.includes('分子量')
-    );
-    
-    if (stockHasErrors) {
-        updateSectionStatus('stock', 'error');
-    } else if (stockValid) {
-        updateSectionStatus('stock', 'completed');
-    } else {
-        updateSectionStatus('stock', '');
-    }
-    
-    const dilutionComplete = (finalMolarityValid && finalVolumeValid && 
-        document.getElementById('final_molarity').value !== '' && 
-        document.getElementById('final_total_vol').value !== '') ||
-        (document.getElementById('final_molarity').value === '' && 
-         document.getElementById('final_total_vol').value === '');
-    
-    const dilutionHasErrors = errors.some(error => 
-        error.includes('最終濃度') || error.includes('ストック溶液量')
-    );
-    
-    if (dilutionHasErrors) {
-        updateSectionStatus('dilution', 'error');
-    } else if (dilutionComplete && stockValid && !stockHasErrors) {
-        updateSectionStatus('dilution', 'completed');
-    } else {
-        updateSectionStatus('dilution', '');
-    }
-    
-    return { warnings, errors };
-}
-
-// バリデーションメッセージ表示関数
-function updateValidationMessages(validation) {
-    const container = document.getElementById('validation-messages');
-    if (!container) return;
-    
-    let messageHTML = '';
-    
-    // エラーメッセージ
-    validation.errors.forEach(error => {
-        messageHTML += `<div class="validation-message error">⚠ ${error}</div>`;
-    });
-    
-    // 警告メッセージ
-    validation.warnings.forEach(warning => {
-        messageHTML += `<div class="validation-message warning">💡 ${warning}</div>`;
-    });
-    
-    container.innerHTML = messageHTML;
-    currentValidation = validation;
-}
-
-// メイン計算・更新関数
-function updateMainResults() {
-    const mw = parseFloat(document.getElementById('mw').value);
-    const molarity = parseFloat(document.getElementById('molarity').value);
-    const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
-    const volume = parseFloat(document.getElementById('volume').value);
-    const volume_unit = parseFloat(document.getElementById('volume_unit').value);
-    const final_molarity = parseFloat(document.getElementById('final_molarity').value);
-    const final_molarity_unit = parseFloat(document.getElementById('final_molarity_unit').value);
-    const final_total_vol = parseFloat(document.getElementById('final_total_vol').value);
-    const final_total_vol_unit = parseFloat(document.getElementById('final_total_vol_unit').value);
-
-    let resultHTML = '';
-    let hasResults = false;
-
-    // ストック溶液計算
-    if (!isNaN(mw) && mw > 0 && !isNaN(molarity) && molarity > 0 && !isNaN(volume) && volume > 0) {
-        const molarity_molL = molarity * molarity_unit;
-        const volume_L = volume * volume_unit;
-        const mass_mg = mw * molarity_molL * volume_L * 1000;
-        let solvent_ul = volume * (volume_unit === 1 ? 1000000 : 1000);
-
-        resultHTML += `<div class="results-grid">
-            <div class="result-item">
-              <div class="result-label">必要な薬量</div>
-              <div class="result-value">${formatMassSI(mass_mg)}</div>
-            </div>
-            <div class="result-item">
-              <div class="result-label">溶媒量</div>
-              <div class="result-value">${formatVolumeSI(solvent_ul)}</div>
-            </div>`;
-
-        hasResults = true;
-
-        // ストックセクションの結果
-        let stockResult = `<strong>ストック溶液調製:</strong> 薬 ${formatMassSI(mass_mg)} + 溶媒 ${formatVolumeSI(solvent_ul)}`;
-        if (mass_mg < 1) {
-            stockResult += '<br><span style="color: var(--warning-color);">⚠ 1mg未満のため母液調製法を推奨</span>';
-        }
-        showSectionResult('section-result-stock', stockResult);
-    } else {
-        showSectionResult('section-result-stock', null);
-    }
-
-    // 希釈計算
-    if (!isNaN(molarity) && molarity > 0 && !isNaN(final_molarity) && final_molarity > 0 &&
-        !isNaN(final_total_vol) && final_total_vol > 0) {
-        const C1 = molarity * molarity_unit;
-        const C2 = final_molarity * final_molarity_unit;
-        const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1);
-        const V1 = (C2 * V2 / 1e6) / C1 * 1e6;
-        const V1_fixed = Math.max(0, V1);
-        const diluent_uL = V2 - V1_fixed;
-
-        if (hasResults) {
-            resultHTML += `
-                <div class="result-item">
-                  <div class="result-label">ストック溶液</div>
-                  <div class="result-value">${formatVolumeSI(V1_fixed)}</div>
-                </div>
-                <div class="result-item">
-                  <div class="result-label">追加溶媒</div>
-                  <div class="result-value">${formatVolumeSI(diluent_uL)}</div>
-                </div>
-            `;
-        } else {
-            resultHTML += `
-            <div class="results-grid">
-                <div class="result-item">
-                  <div class="result-label">ストック溶液</div>
-                  <div class="result-value">${formatVolumeSI(V1_fixed)}</div>
-                </div>
-                <div class="result-item">
-                  <div class="result-label">追加溶媒</div>
-                  <div class="result-value">${formatVolumeSI(diluent_uL)}</div>
-                </div>
-            `;
-        }
-        resultHTML += '</div>';
-        hasResults = true;
-
-        // 希釈セクションの結果
-        let dilutionResult = `<strong>希釈配合:</strong> ストック ${formatVolumeSI(V1_fixed)} + 溶媒 ${formatVolumeSI(diluent_uL)}`;
-        if (V1_fixed < 1) {
-            dilutionResult += '<br><span style="color: var(--warning-color);">⚠ 高精度ピペット必要</span>';
-        }
-        showSectionResult('section-result-dilution', dilutionResult);
-    } else {
-        showSectionResult('section-result-dilution', null);
-    }
-
-    if (hasResults) {
-        if (!resultHTML.includes('</div>')) {
-            resultHTML += '</div>';
-        }
-        document.getElementById('results-content').innerHTML = resultHTML;
-    } else {
-        document.getElementById('results-content').innerHTML = `
-            <div class="results-placeholder">
-              必要項目を入力すると、ここに結果が表示されます
-            </div>
-        `;
-    }
-    
-    // バリデーションチェックを実行
-    const validation = validateInputs();
-    updateValidationMessages(validation);
-}
-
-function showSectionResult(containerId, content) {
-    const container = document.getElementById(containerId);
-    if (container) {
-        if (content) {
-            container.innerHTML = content;
-            container.classList.add('show');
-        } else {
-            container.classList.remove('show');
-        }
-    }
+  }
+  
+  // セクションステータスの更新
+  const stockValid = mwValid && molarityValid && volumeValid;
+  const stockHasErrors = errors.some(error => error.includes('調製量') || error.includes('薬量') || error.includes('分子量') || error.includes('濃度'));
+  const stockHasWarnings = warnings.some(warning => warning.includes('分子量') || warning.includes('ストック濃度') || warning.includes('調製量') || warning.includes('薬量'));
+  
+  if (stockHasErrors) {
+    updateSectionStatus('stock', 'error');
+  } else if (stockHasWarnings) {
+    updateSectionStatus('stock', 'warning');
+  } else if (stockValid) {
+    updateSectionStatus('stock', 'completed');
+  } else {
+    updateSectionStatus('stock', '');
+  }
+  
+  // 🎯 希釈セクションステータスの更新（完全に修正）
+  const dilutionHasErrors = errors.some(error => error.includes('最終濃度') || error.includes('ストック溶液量') || error.includes('希釈後総量') || error.includes('希釈計算'));
+  const dilutionHasWarnings = warnings.some(warning => warning.includes('希釈倍率') || warning.includes('ストック溶液量'));
+  
+  if (dilutionHasErrors) {
+    updateSectionStatus('dilution', 'error');
+  } else if (dilutionHasWarnings) {
+    updateSectionStatus('dilution', 'warning');
+  } else if (bothFieldsFilled && finalMolarityValid && finalVolumeValid && stockValid && !stockHasErrors) {
+    // 両方のフィールドが正しく入力され、ストック情報も完了している場合のみ「完了」
+    updateSectionStatus('dilution', 'completed');
+  } else {
+    // 未入力（任意）、片方のみ入力、ストック未完了の場合はステータス表示なし
+    updateSectionStatus('dilution', '');
+  }
+  
+  return { warnings, errors };
 }
 
 function formatNumber(num) {
-    if (num === 0) return "0";
-    if (Math.abs(num) >= 1) {
-        return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    } else if (Math.abs(num) >= 0.01) {
-        return num.toLocaleString(undefined, { maximumFractionDigits: 4 });
-    } else {
-        return num.toFixed(5).replace(/0+$/,"").replace(/\.$/,"");
-    }
+  if (num === 0) return "0";
+  if (Math.abs(num) >= 1) {
+    return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  } else if (Math.abs(num) >= 0.01) {
+    return num.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  } else {
+    return num.toFixed(5).replace(/0+$/,"").replace(/\.$/,"");
+  }
 }
 
 function formatVolumeSI(value_ul) {
-    if (value_ul >= 1e6) {
-        return `${formatNumber(value_ul / 1e6)} L`;
-    } else if (value_ul >= 1e3) {
-        return `${formatNumber(value_ul / 1e3)} mL`;
-    } else if (value_ul >= 1) {
-        return `${formatNumber(value_ul)} μL`;
-    } else if (value_ul >= 1e-3) {
-        return `${formatNumber(value_ul * 1e3)} nL`;
-    } else if (value_ul > 0) {
-        return `${formatNumber(value_ul * 1e6)} pL`;
-    } else {
-        return "0";
-    }
+  if (value_ul >= 1e6) {
+    return `${formatNumber(value_ul / 1e6)} L`;
+  } else if (value_ul >= 1e3) {
+    return `${formatNumber(value_ul / 1e3)} mL`;
+  } else if (value_ul >= 1) {
+    return `${formatNumber(value_ul)} μL`;
+  } else if (value_ul >= 1e-3) {
+    return `${formatNumber(value_ul * 1e3)} nL`;
+  } else if (value_ul > 0) {
+    return `${formatNumber(value_ul * 1e6)} pL`;
+  } else {
+    return "0";
+  }
 }
 
-function formatMassSI(value_mg) {
-    if (value_mg >= 1000) {
-        return `${formatNumber(value_mg / 1000)} g`;
-    } else if (value_mg >= 1) {
-        return `${formatNumber(value_mg)} mg`;
-    } else if (value_mg >= 0.001) {
-        return `${formatNumber(value_mg * 1000)} μg`;
-    } else if (value_mg > 0) {
-        return `${formatNumber(value_mg * 1e6)} ng`;
-    } else {
-        return "0";
+function updateMainResults() {
+  const mw = parseFloat(document.getElementById('mw').value);
+  const molarity = parseFloat(document.getElementById('molarity').value);
+  const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
+  const volume = parseFloat(document.getElementById('volume').value);
+  const volume_unit = parseFloat(document.getElementById('volume_unit').value);
+  const final_molarity = parseFloat(document.getElementById('final_molarity').value);
+  const final_molarity_unit = parseFloat(document.getElementById('final_molarity_unit').value);
+  const final_total_vol = parseFloat(document.getElementById('final_total_vol').value);
+  const final_total_vol_unit = parseFloat(document.getElementById('final_total_vol_unit').value);
+  const selectedMassUnit = document.getElementById('mass_unit').value;
+  
+  let resultHTML = '';
+  let hasResults = false;
+  
+  if (!isNaN(mw) && mw > 0 && !isNaN(molarity) && molarity > 0 && !isNaN(volume) && volume > 0) {
+    const molarity_molL = molarity * molarity_unit;
+    const volume_L = volume * volume_unit;
+    const mass_mg = mw * molarity_molL * volume_L * 1000;
+    let solvent_ul = volume * (volume_unit === 1 ? 1000000 : 1000);
+    const massDisplay = formatMassCustomUnit(mass_mg, selectedMassUnit);
+    
+    resultHTML += `<div class="results-grid">
+        <div class="result-item">
+          <div class="result-label">必要な薬量</div>
+          <div class="result-value">${massDisplay}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">溶媒量</div>
+          <div class="result-value">${formatVolumeSI(solvent_ul)}</div>
+        </div>`;
+    
+    hasResults = true;
+    saveToHistory(); // 履歴に保存
+    
+    let stockResult = `<strong>ストック溶液調製:</strong> 薬 ${massDisplay} + 溶媒 ${formatVolumeSI(solvent_ul)}`;
+    if (mass_mg < 1) {
+      stockResult += '<br><span style="color: var(--warning-color);">⚠ 1mg未満のため母液調製法を推奨</span>';
     }
+    showSectionResult('section-result-stock', stockResult);
+  } else {
+    showSectionResult('section-result-stock', null);
+  }
+  
+  if (!isNaN(molarity) && molarity > 0 && !isNaN(final_molarity) && final_molarity > 0 &&
+      !isNaN(final_total_vol) && final_total_vol > 0) {
+    const C1 = molarity * molarity_unit;
+    const C2 = final_molarity * final_molarity_unit;
+    const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1);
+    const V1 = (C2 * V2 / 1e6) / C1 * 1e6;
+    const V1_fixed = Math.max(0, V1);
+    const diluent_uL = V2 - V1_fixed;
+    
+    if (hasResults) {
+      resultHTML += `
+          <div class="result-item">
+            <div class="result-label">ストック溶液</div>
+            <div class="result-value">${formatVolumeSI(V1_fixed)}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">追加溶媒</div>
+            <div class="result-value">${formatVolumeSI(diluent_uL)}</div>
+          </div>
+      `;
+    } else {
+      resultHTML += `
+      <div class="results-grid">
+          <div class="result-item">
+            <div class="result-label">ストック溶液</div>
+            <div class="result-value">${formatVolumeSI(V1_fixed)}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">追加溶媒</div>
+            <div class="result-value">${formatVolumeSI(diluent_uL)}</div>
+          </div>
+      `;
+    }
+    resultHTML += '</div>';
+    hasResults = true;
+    
+    let dilutionResult = `<strong>希釈配合:</strong> ストック ${formatVolumeSI(V1_fixed)} + 溶媒 ${formatVolumeSI(diluent_uL)}`;
+    if (V1_fixed < 1) {
+      dilutionResult += '<br><span style="color: var(--warning-color);">⚠ 高精度ピペット必要</span>';
+    }
+    showSectionResult('section-result-dilution', dilutionResult);
+  } else {
+    showSectionResult('section-result-dilution', null);
+  }
+  
+  if (hasResults) {
+    if (!resultHTML.includes('</div>')) {
+      resultHTML += '</div>';
+    }
+    document.getElementById('results-content').innerHTML = resultHTML;
+  } else {
+    document.getElementById('results-content').innerHTML = `
+        <div class="results-placeholder">
+          必要項目を入力すると、ここに結果が表示されます
+        </div>
+    `;
+  }
+  
+  const validation = validateInputs();
+  currentValidation = validation;
 }
 
-// 入力イベント
+function showSectionResult(containerId, content) {
+  const container = document.getElementById(containerId);
+  if (container) {
+    if (content) {
+      container.innerHTML = content;
+      container.classList.add('show');
+    } else {
+      container.classList.remove('show');
+    }
+  }
+}
+
+// イベントリスナー設定
 [
   "mw","molarity","molarity_unit","volume","volume_unit","mass_unit",
   "final_molarity","final_molarity_unit","final_total_vol","final_total_vol_unit"
@@ -730,89 +2066,61 @@ function formatMassSI(value_mg) {
   }
 });
 
-// 初期化
 updateMainResults();
 
-// --- PC・スマホ対応：計算結果パネルの最小化/再表示 ---
-const panel = document.getElementById('results-panel');
-const minimizeBtn = document.getElementById('results-minimize');
-const restoreBtn = document.getElementById('results-restore');
-const showBtn = document.getElementById('results-show');
-
-// 最小化ボタンのイベント
-minimizeBtn.addEventListener('click', function() {
-    panel.classList.add('minimized');
-    if (window.innerWidth <= 768) {
-        showBtn.style.display = 'block';
-    }
-});
-
-// 復元ボタンのイベント（PC用）
-restoreBtn.addEventListener('click', function() {
-    panel.classList.remove('minimized');
-});
-
-// モバイル用の表示ボタン
-showBtn.addEventListener('click', function() {
-    panel.classList.remove('minimized');
-    showBtn.style.display = 'none';
-});
-
-// PC用：最小化されたタイトルをクリックして復元
-const resultsTitle = document.querySelector('.results-title');
-resultsTitle.addEventListener('click', function() {
-    if (window.innerWidth > 768 && panel.classList.contains('minimized')) {
-        panel.classList.remove('minimized');
-    }
-});
-
-// --- CID検索 ---
 function fetchPubChem() {
-    const cid = document.getElementById('cid').value.trim();
-    const searchButton = document.querySelector('.btn-primary');
-    const searchText = document.getElementById('search-text');
-    if (!cid) {
-        alert("CIDを入力してください。");
-        document.getElementById('cid').focus();
-        return;
-    }
-    searchText.innerHTML = '<span class="loading" aria-hidden="true"></span>検索中';
-    searchButton.disabled = true;
-
-    const originalEndpoint = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularWeight,IUPACName,Title,CanonicalSMILES,MolecularFormula/JSON`;
-    const proxyEndpoint = `https://api.allorigins.win/get?url=${encodeURIComponent(originalEndpoint)}`;
-    fetch(proxyEndpoint)
-      .then(response => {
-        if (!response.ok) throw new Error("情報が見つかりませんでした。");
-        return response.json();
-      })
-      .then(proxyData => {
-        const data = JSON.parse(proxyData.contents);
-        const prop = data.PropertyTable.Properties[0];
-        if (prop.CID) document.getElementById('cid').value = prop.CID;
-        if (prop.MolecularWeight) document.getElementById('mw').value = prop.MolecularWeight;
-        let infoHTML = "<table class='info-table' role='table'>";
-        infoHTML += "<caption class='sr-only'>取得した薬物情報</caption>";
-        infoHTML += `<tr><td class='info-label'>CID</td><td>${prop.CID ? prop.CID : "-"}</td></tr>`;
-        infoHTML += `<tr><td class='info-label'>化学式</td><td>${prop.MolecularFormula ? prop.MolecularFormula : "-"}</td></tr>`;
-        infoHTML += `<tr><td class='info-label'>分子量</td><td>${prop.MolecularWeight ? prop.MolecularWeight : "-"}</td></tr>`;
-        if (prop.CanonicalSMILES)
-            infoHTML += `<tr><td class='info-label'>SMILES</td><td style="word-break: break-all;">${prop.CanonicalSMILES}</td></tr>`;
-        infoHTML += "</table>";
-        document.getElementById('drug_info').innerHTML = infoHTML;
-        document.getElementById('drug_info').style.display = "block";
-        updateSectionStatus('search', 'completed');
-        updateMainResults();
-      })
-      .catch(error => {
-        document.getElementById('drug_info').style.display = "none";
-        alert("薬物情報の取得に失敗しました: " + error.message);
-        updateSectionStatus('search', 'error');
-      })
-      .finally(() => {
-        searchText.textContent = '検索';
-        searchButton.disabled = false;
-      });
+  const cid = document.getElementById('cid').value.trim();
+  const searchButton = document.querySelector('.btn-primary');
+  const searchText = document.getElementById('search-text');
+  
+  if (!cid) {
+    showFloatingNotification("CIDを入力してください", 'error');
+    document.getElementById('cid').focus();
+    return;
+  }
+  
+  searchText.innerHTML = '<span class="loading-spinner"></span>検索中';
+  searchButton.disabled = true;
+  
+  const originalEndpoint = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularWeight,IUPACName,Title,CanonicalSMILES,MolecularFormula/JSON`;
+  const proxyEndpoint = `https://api.allorigins.win/get?url=${encodeURIComponent(originalEndpoint)}`;
+  
+  fetch(proxyEndpoint)
+    .then(response => {
+      if (!response.ok) throw new Error("情報が見つかりませんでした。");
+      return response.json();
+    })
+    .then(proxyData => {
+      const data = JSON.parse(proxyData.contents);
+      const prop = data.PropertyTable.Properties[0];
+      
+      if (prop.CID) document.getElementById('cid').value = prop.CID;
+      if (prop.MolecularWeight) document.getElementById('mw').value = prop.MolecularWeight;
+      
+      let infoHTML = "<table class='info-table' role='table'>";
+      infoHTML += "<caption class='sr-only'>取得した薬物情報</caption>";
+      infoHTML += `<tr><td class='info-label'>CID</td><td>${prop.CID ? prop.CID : "-"}</td></tr>`;
+      infoHTML += `<tr><td class='info-label'>化学式</td><td>${prop.MolecularFormula ? prop.MolecularFormula : "-"}</td></tr>`;
+      infoHTML += `<tr><td class='info-label'>分子量</td><td>${prop.MolecularWeight ? prop.MolecularWeight : "-"}</td></tr>`;
+      if (prop.CanonicalSMILES)
+        infoHTML += `<tr><td class='info-label'>SMILES</td><td style="word-break: break-all;">${prop.CanonicalSMILES}</td></tr>`;
+      infoHTML += "</table>";
+      
+      document.getElementById('drug_info').innerHTML = infoHTML;
+      document.getElementById('drug_info').style.display = "block";
+      updateSectionStatus('search', 'completed');
+      updateMainResults();
+      showFloatingNotification(`化合物情報を取得しました: ${prop.Title || 'CID ' + prop.CID}`, 'success');
+    })
+    .catch(error => {
+      document.getElementById('drug_info').style.display = "none";
+      showFloatingNotification("薬物情報の取得に失敗しました: " + error.message, 'error');
+      updateSectionStatus('search', 'error');
+    })
+    .finally(() => {
+      searchText.textContent = '検索';
+      searchButton.disabled = false;
+    });
 }
 </script>
 </body>
