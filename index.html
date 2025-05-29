@@ -1630,45 +1630,46 @@ function initializeResultsMinimizeButton() {
   const resultsPanel = document.getElementById('results-panel');
   const minimizeBtn = document.getElementById('results-minimize-btn');
   const minimizeIcon = document.getElementById('results-minimize-icon');
+  const resultsTitle = document.querySelector('.results-title'); // ★追加
 
-  if (!resultsPanel || !minimizeBtn || !minimizeIcon) {
+  if (!resultsPanel || !minimizeBtn || !minimizeIcon || !resultsTitle) {
     console.error('結果パネルまたは最小化ボタンの要素が見つかりません');
     return;
   }
 
-function setResultsPanelMinimized(minimized) {
-  const resultsTitle = document.querySelector('.results-title');
-  if (minimized) {
-    resultsPanel.classList.add('minimized');
-    minimizeIcon.textContent = '▲';
-    minimizeBtn.title = '結果パネルを元に戻す';
-    minimizeBtn.setAttribute('aria-label', '結果パネルを元に戻す');
-    // 必ず innerHTML で書き換え
-    resultsTitle.innerHTML = '▲ 計算結果を開く';
-    localStorage.setItem('results-panel-minimized', 'true');
-  } else {
-    resultsPanel.classList.remove('minimized');
-    minimizeIcon.textContent = '▼';
-    minimizeBtn.title = '結果パネルを最小化';
-    minimizeBtn.setAttribute('aria-label', '結果パネルを最小化');
-    // モードによってタイトル復元
-    resultsTitle.innerHTML = (currentCalculationMode === 'stock')
-      ? '⚗️ 計算結果'
-      : '🧪 モル濃度結果';
-    localStorage.setItem('results-panel-minimized', 'false');
+  function setResultsPanelMinimized(minimized) {
+    if (minimized) {
+      resultsPanel.classList.add('minimized');
+      minimizeIcon.textContent = '▲';
+      minimizeBtn.title = '結果パネルを元に戻す';
+      minimizeBtn.setAttribute('aria-label', '結果パネルを元に戻す');
+      resultsTitle.innerHTML = '▲ 計算結果を開く（タップ）'; // ヒントおすすめ
+      localStorage.setItem('results-panel-minimized', 'true');
+    } else {
+      resultsPanel.classList.remove('minimized');
+      minimizeIcon.textContent = '▼';
+      minimizeBtn.title = '結果パネルを最小化';
+      minimizeBtn.setAttribute('aria-label', '結果パネルを最小化');
+      resultsTitle.innerHTML = (currentCalculationMode === 'stock')
+        ? '⚗️ 計算結果'
+        : '🧪 モル濃度結果';
+      localStorage.setItem('results-panel-minimized', 'false');
+    }
   }
-}
 
-  // クリックイベントの設定
+  // ★ここ！
   minimizeBtn.addEventListener('click', function(event) {
-  if (resultsPanel.classList.contains('minimized')) {
-    setResultsPanelMinimized(false);
-  }
-});
     event.preventDefault();
     event.stopPropagation();
     const isCurrentlyMinimized = resultsPanel.classList.contains('minimized');
     setResultsPanelMinimized(!isCurrentlyMinimized);
+  });
+
+  // ★ここも！
+  resultsTitle.addEventListener('click', function() {
+    if (resultsPanel.classList.contains('minimized')) {
+      setResultsPanelMinimized(false);
+    }
   });
 
   // 初期状態の復元
@@ -1677,6 +1678,7 @@ function setResultsPanelMinimized(minimized) {
   
   console.log('結果パネルの最小化ボタンが正常に初期化されました');
 }
+
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
