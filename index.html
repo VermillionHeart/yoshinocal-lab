@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>YoshinovaCalc Lab V2.0 - Enhanced</title>
+  <title>YoshinovaCalc Lab V2.1 - Universal Calculator</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230d6efd;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230b5ed7;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='url(%23grad)' rx='6'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23fff'/%3E%3Ccircle cx='16' cy='6' r='2' fill='%23fff'/%3E%3Ccircle cx='24' cy='8' r='2' fill='%23fff'/%3E%3Ccircle cx='12' cy='16' r='2' fill='%23fff'/%3E%3Ccircle cx='20' cy='14' r='2' fill='%23fff'/%3E%3Ccircle cx='8' cy='24' r='2' fill='%23fff'/%3E%3Ccircle cx='16' cy='22' r='2' fill='%23fff'/%3E%3Ccircle cx='24' cy='24' r='2' fill='%23fff'/%3E%3Cline x1='8' y1='8' x2='16' y2='6' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='6' x2='24' y2='8' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='8' y1='8' x2='12' y2='16' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='6' x2='12' y2='16' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='6' x2='20' y2='14' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='24' y1='8' x2='20' y2='14' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='12' y1='16' x2='8' y2='24' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='12' y1='16' x2='16' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='20' y1='14' x2='16' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='20' y1='14' x2='24' y2='24' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='22' x2='24' y2='24' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -214,6 +214,92 @@
       color: var(--muted-text);
       margin-top: 0.8rem;
       opacity: 0.8;
+    }
+
+    /* 🎯 計算モード選択タブ */
+    .calculation-mode-tabs {
+      display: flex;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      padding: 0.3rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+      backdrop-filter: var(--backdrop-blur);
+    }
+
+    .tab-button {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--secondary-text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .tab-button:hover::before {
+      left: 100%;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-hover));
+      color: white;
+      box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .tab-button.active::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    .tab-button:hover:not(.active) {
+      background: rgba(66, 153, 225, 0.1);
+      color: var(--primary-blue);
+    }
+
+    /* モード切替用コンテナ */
+    .calculation-mode {
+      display: none;
+    }
+
+    .calculation-mode.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .toolbar {
@@ -566,7 +652,7 @@
       transform: translateY(-1px) scale(0.98);
     }
 
-    /* 🎯 ここが最重要！フィールド直下のメッセージ表示を大幅強化 */
+    /* フィールド直下のメッセージ表示を大幅強化 */
     .input-error-message, .input-warning-message {
       font-size: 0.85rem;
       min-height: 1.2em;
@@ -617,6 +703,20 @@
     /* 空の場合はメッセージを完全に隠す */
     .input-error-message:empty, .input-warning-message:empty {
       display: none;
+    }
+
+    /* 🎯 モル濃度計算専用のスタイル */
+    .concentration-display {
+      background: linear-gradient(135deg, rgba(66, 153, 225, 0.1), rgba(72, 187, 120, 0.1));
+      border: 1px solid var(--primary-blue);
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary-blue);
+      backdrop-filter: var(--backdrop-blur);
+      animation: bounceIn 0.4s ease-out;
     }
 
     .section-result {
@@ -886,7 +986,7 @@
       width: 30%;
     }
 
-    /* 🎯 フローティング通知（緊急時用） */
+    /* フローティング通知（緊急時用） */
     .floating-notification {
       position: fixed;
       top: 20px;
@@ -1021,6 +1121,16 @@
         left: 10px;
         max-width: none;
       }
+
+      .calculation-mode-tabs {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .tab-button {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.8rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1063,7 +1173,8 @@
       .results-panel,
       .toolbar,
       .theme-toggle,
-      .keyboard-shortcuts {
+      .keyboard-shortcuts,
+      .calculation-mode-tabs {
         display: none !important;
       }
 
@@ -1089,13 +1200,23 @@
       <h1>
         <span class="labicon" aria-hidden="true">🧬</span>
         YoshinovaCalc Lab
-        <span class="version-badge">V2.0</span>
+        <span class="version-badge">V2.1</span>
         <span class="labicon" aria-hidden="true">⚗️</span>
       </h1>
       <div class="copyright">
         © 2025 Fumihiko Yoshino. All Rights Reserved.
       </div>
     </header>
+
+    <!-- 🎯 計算モード選択タブ -->
+    <div class="calculation-mode-tabs">
+      <button class="tab-button active" onclick="switchCalculationMode('stock')" id="tab-stock">
+        🔬 ストック溶液調製
+      </button>
+      <button class="tab-button" onclick="switchCalculationMode('molarity')" id="tab-molarity">
+        🧪 モル濃度計算
+      </button>
+    </div>
 
     <div class="toolbar">
       <button class="toolbar-btn" id="formula-btn" onclick="toggleFormula()" title="計算式表示 (Ctrl+F)">
@@ -1113,169 +1234,264 @@
     </div>
 
     <main id="main-content">
-      <!-- よく使用される化合物のプリセット -->
-      <section class="form-section" id="section-presets">
-        <h2>
-          <div class="section-icon">⚡</div>
-          クイックプリセット
-        </h2>
-        <div class="preset-chemicals">
-          <button class="preset-btn" onclick="applyPreset('4-OH-TEMPO', 157.25)">4-OH-TEMPO</button>
-          <button class="preset-btn" onclick="applyPreset('CYPMPO', 225.32)">CYPMPO</button>
-          <button class="preset-btn" onclick="applyPreset('L-histidine', 155.15)">L-histidine</button>
-          <button class="preset-btn" onclick="applyPreset('Phloxine B', 641.83)">Phloxine B</button>
-          <button class="preset-btn" onclick="applyPreset('Rose Bengal', 1017.60)">Rose Bengal</button>
-          <button class="preset-btn" onclick="applyPreset('TEMPOL', 172.24)">TEMPOL</button>
-        </div>
-      </section>
+      <!-- 🔬 ストック溶液調製モード -->
+      <div id="stock-mode" class="calculation-mode active">
+        <!-- よく使用される化合物のプリセット -->
+        <section class="form-section" id="section-presets">
+          <h2>
+            <div class="section-icon">⚡</div>
+            クイックプリセット
+          </h2>
+          <div class="preset-chemicals">
+            <button class="preset-btn" onclick="applyPreset('4-OH-TEMPO', 157.25)">4-OH-TEMPO</button>
+            <button class="preset-btn" onclick="applyPreset('CYPMPO', 225.32)">CYPMPO</button>
+            <button class="preset-btn" onclick="applyPreset('L-histidine', 155.15)">L-histidine</button>
+            <button class="preset-btn" onclick="applyPreset('Phloxine B', 641.83)">Phloxine B</button>
+            <button class="preset-btn" onclick="applyPreset('Rose Bengal', 1017.60)">Rose Bengal</button>
+            <button class="preset-btn" onclick="applyPreset('TEMPOL', 172.24)">TEMPOL</button>
+          </div>
+        </section>
 
-      <!-- ストック溶液設定 -->
-      <section class="form-section" id="section-stock" role="region" aria-labelledby="stock-heading">
-        <h2 id="stock-heading">
-          <div class="section-icon">🔬</div>
-          ストック溶液設定
-          <span class="section-status" id="status-stock"></span>
-        </h2>
-        <div class="input-group">
-          <label for="mw" class="input-label required">分子量（g/mol）</label>
-          <div class="input-row">
-            <div class="input-with-status">
-              <div class="input-with-unit">
-                <input type="number" id="mw" step="0.01" placeholder="分子量" required inputmode="decimal" accesskey="m">
-                <span>g/mol</span>
+        <!-- ストック溶液設定 -->
+        <section class="form-section" id="section-stock" role="region" aria-labelledby="stock-heading">
+          <h2 id="stock-heading">
+            <div class="section-icon">🔬</div>
+            ストック溶液設定
+            <span class="section-status" id="status-stock"></span>
+          </h2>
+          <div class="input-group">
+            <label for="mw" class="input-label required">分子量（g/mol）</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="mw" step="0.01" placeholder="分子量" required inputmode="decimal" accesskey="m">
+                  <span>g/mol</span>
+                </div>
+                <span class="input-status" id="status-mw"></span>
+                <div class="input-error-message" id="error-mw"></div>
               </div>
-              <span class="input-status" id="status-mw"></span>
-              <div class="input-error-message" id="error-mw"></div>
             </div>
+            <small>物質の分子量をg/mol単位で入力 (Shortcut: Alt+M)</small>
           </div>
-          <small>物質の分子量をg/mol単位で入力 (Shortcut: Alt+M)</small>
-        </div>
 
-        <div class="input-group">
-          <label for="molarity" class="input-label required">ストック溶液のモル濃度</label>
-          <div class="input-row">
-            <div class="input-with-status">
-              <div class="input-with-unit">
-                <input type="number" id="molarity" step="any" min="0" placeholder="濃度" required inputmode="decimal" accesskey="c">
-                <select id="molarity_unit" aria-label="濃度の単位">
-                  <option value="1">mol/L</option>
-                  <option value="0.001">mmol/L</option>
-                  <option value="0.000001">μmol/L</option>
-                  <option value="0.000000001">nmol/L</option>
-                </select>
+          <div class="input-group">
+            <label for="molarity" class="input-label required">ストック溶液のモル濃度</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="molarity" step="any" min="0" placeholder="濃度" required inputmode="decimal" accesskey="c">
+                  <select id="molarity_unit" aria-label="濃度の単位">
+                    <option value="1">mol/L</option>
+                    <option value="0.001">mmol/L</option>
+                    <option value="0.000001">μmol/L</option>
+                    <option value="0.000000001">nmol/L</option>
+                  </select>
+                </div>
+                <span class="input-status" id="status-molarity"></span>
+                <div class="input-error-message" id="error-molarity"></div>
               </div>
-              <span class="input-status" id="status-molarity"></span>
-              <div class="input-error-message" id="error-molarity"></div>
             </div>
+            <small>調製したいストック溶液の濃度を入力 (Shortcut: Alt+C)</small>
           </div>
-          <small>調製したいストック溶液の濃度を入力 (Shortcut: Alt+C)</small>
-        </div>
 
-        <div class="input-group">
-          <label for="volume" class="input-label required">ストック溶液量</label>
-          <div class="input-row">
-            <div class="input-with-status">
-              <div class="input-with-unit">
-                <input type="number" id="volume" step="any" min="0" placeholder="調製量" required inputmode="decimal" accesskey="v">
-                <select id="volume_unit" aria-label="体積の単位">
-                  <option value="0.001">mL</option>
-                  <option value="1">L</option>
-                </select>
+          <div class="input-group">
+            <label for="volume" class="input-label required">ストック溶液量</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="volume" step="any" min="0" placeholder="調製量" required inputmode="decimal" accesskey="v">
+                  <select id="volume_unit" aria-label="体積の単位">
+                    <option value="0.001">mL</option>
+                    <option value="1">L</option>
+                  </select>
+                </div>
+                <span class="input-status" id="status-volume"></span>
+                <div class="input-error-message" id="error-volume"></div>
               </div>
-              <span class="input-status" id="status-volume"></span>
-              <div class="input-error-message" id="error-volume"></div>
+            </div>
+            <small>調製したいストック溶液の総量を入力 (Shortcut: Alt+V)</small>
+          </div>
+
+          <div class="input-group">
+            <label for="mass_unit" class="input-label">表示単位（必要な薬量）</label>
+            <div class="input-row">
+              <select id="mass_unit" aria-label="質量の表示単位" style="width:7em;">
+                <option value="mg">mg</option>
+                <option value="g">g</option>
+                <option value="μg">μg</option>
+              </select>
             </div>
           </div>
-          <small>調製したいストック溶液の総量を入力 (Shortcut: Alt+V)</small>
-        </div>
 
-        <div class="input-group">
-          <label for="mass_unit" class="input-label">表示単位（必要な薬量）</label>
-          <div class="input-row">
-            <select id="mass_unit" aria-label="質量の表示単位" style="width:7em;">
-              <option value="mg">mg</option>
-              <option value="g">g</option>
-              <option value="μg">μg</option>
-            </select>
-          </div>
-        </div>
+          <div id="section-result-stock" class="section-result"></div>
+        </section>
 
-        <div id="section-result-stock" class="section-result"></div>
-      </section>
-
-      <!-- 希釈計算 -->
-      <section class="form-section" id="section-dilution" role="region" aria-labelledby="dilution-heading">
-        <h2 id="dilution-heading">
-          <div class="section-icon">💧</div>
-          希釈計算（任意）
-          <span class="section-status" id="status-dilution"></span>
-        </h2>
-        <div class="input-group">
-          <label for="final_molarity" class="input-label">実験での最終濃度</label>
-          <div class="input-row">
-            <div class="input-with-status">
-              <div class="input-with-unit">
-                <input type="number" id="final_molarity" step="any" min="0" placeholder="例: 5" inputmode="decimal" accesskey="f">
-                <select id="final_molarity_unit" aria-label="最終濃度の単位">
-                  <option value="1">mol/L</option>
-                  <option value="0.001">mmol/L</option>
-                  <option value="0.000001">μmol/L</option>
-                  <option value="0.000000001">nmol/L</option>
-                </select>
+        <!-- 希釈計算 -->
+        <section class="form-section" id="section-dilution" role="region" aria-labelledby="dilution-heading">
+          <h2 id="dilution-heading">
+            <div class="section-icon">💧</div>
+            希釈計算（任意）
+            <span class="section-status" id="status-dilution"></span>
+          </h2>
+          <div class="input-group">
+            <label for="final_molarity" class="input-label">実験での最終濃度</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="final_molarity" step="any" min="0" placeholder="例: 5" inputmode="decimal" accesskey="f">
+                  <select id="final_molarity_unit" aria-label="最終濃度の単位">
+                    <option value="1">mol/L</option>
+                    <option value="0.001">mmol/L</option>
+                    <option value="0.000001">μmol/L</option>
+                    <option value="0.000000001">nmol/L</option>
+                  </select>
+                </div>
+                <span class="input-status" id="status-final-molarity"></span>
+                <div class="input-error-message" id="error-final-molarity"></div>
               </div>
-              <span class="input-status" id="status-final-molarity"></span>
-              <div class="input-error-message" id="error-final-molarity"></div>
             </div>
+            <small>実験で使用したい最終濃度を入力 (Shortcut: Alt+F)</small>
           </div>
-          <small>実験で使用したい最終濃度を入力 (Shortcut: Alt+F)</small>
-        </div>
 
-        <div class="input-group">
-          <label for="final_total_vol" class="input-label">希釈後総量（溶媒＋サンプル）</label>
-          <div class="input-row">
-            <div class="input-with-status">
-              <div class="input-with-unit">
-                <input type="number" id="final_total_vol" step="any" min="0" placeholder="例: 100" inputmode="decimal" accesskey="t">
-                <select id="final_total_vol_unit" aria-label="希釈後総量の単位">
-                  <option value="0.001">μL</option>
-                  <option value="1">mL</option>
-                </select>
+          <div class="input-group">
+            <label for="final_total_vol" class="input-label">希釈後総量（溶媒＋サンプル）</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="final_total_vol" step="any" min="0" placeholder="例: 100" inputmode="decimal" accesskey="t">
+                  <select id="final_total_vol_unit" aria-label="希釈後総量の単位">
+                    <option value="0.001">μL</option>
+                    <option value="1">mL</option>
+                  </select>
+                </div>
+                <span class="input-status" id="status-final-volume"></span>
+                <div class="input-error-message" id="error-final-total-vol"></div>
               </div>
-              <span class="input-status" id="status-final-volume"></span>
-              <div class="input-error-message" id="error-final-total-vol"></div>
             </div>
+            <small>溶媒にストック溶液を添加した後の最終総液量を入力 (Shortcut: Alt+T)</small>
           </div>
-          <small>溶媒にストック溶液を添加した後の最終総液量を入力 (Shortcut: Alt+T)</small>
-        </div>
 
-        <div id="section-result-dilution" class="section-result"></div>
-      </section>
+          <div id="section-result-dilution" class="section-result"></div>
+        </section>
 
-      <!-- CID検索セクション -->
-      <section class="form-section" id="section-search" role="region" aria-labelledby="search-heading">
-        <h2 id="search-heading">
-          <div class="section-icon">🔍</div>
-          薬物情報検索（CIDコード）
-          <span class="section-status" id="status-search"></span>
-        </h2>
-        <div class="input-group">
-          <label for="cid" class="input-label">CIDコード</label>
-          <div class="input-row">
-            <div class="input-with-status" style="flex-direction: column;">
-              <input type="text" id="cid" autocomplete="off" placeholder="例: 54670067" aria-describedby="cid-help" accesskey="s">
-              <span class="input-status" id="status-cid"></span>
-              <div class="input-error-message" id="error-cid"></div>
+        <!-- CID検索セクション -->
+        <section class="form-section" id="section-search" role="region" aria-labelledby="search-heading">
+          <h2 id="search-heading">
+            <div class="section-icon">🔍</div>
+            薬物情報検索（CIDコード）
+            <span class="section-status" id="status-search"></span>
+          </h2>
+          <div class="input-group">
+            <label for="cid" class="input-label">CIDコード</label>
+            <div class="input-row">
+              <div class="input-with-status" style="flex-direction: column;">
+                <input type="text" id="cid" autocomplete="off" placeholder="例: 54670067" aria-describedby="cid-help" accesskey="s">
+                <span class="input-status" id="status-cid"></span>
+                <div class="input-error-message" id="error-cid"></div>
+              </div>
+              <button class="btn btn-primary" type="button" onclick="fetchPubChem()">
+                <span id="search-text">検索</span>
+              </button>
             </div>
-            <button class="btn btn-primary" type="button" onclick="fetchPubChem()">
-              <span id="search-text">検索</span>
-            </button>
+            <small id="cid-help">PubChemのCompound IDを入力 (Shortcut: Alt+S)</small>
           </div>
-          <small id="cid-help">PubChemのCompound IDを入力 (Shortcut: Alt+S)</small>
-        </div>
-        <div id="drug_info" class="drug-info" style="display:none;" role="region" aria-labelledby="drug-info-heading">
-          <h3 id="drug-info-heading" class="sr-only">取得した薬物情報</h3>
-        </div>
-      </section>
+          <div id="drug_info" class="drug-info" style="display:none;" role="region" aria-labelledby="drug-info-heading">
+            <h3 id="drug-info-heading" class="sr-only">取得した薬物情報</h3>
+          </div>
+        </section>
+      </div>
+
+      <!-- 🧪 モル濃度計算モード -->
+      <div id="molarity-mode" class="calculation-mode">
+        <section class="form-section" id="section-molarity-info">
+          <h2>
+            <div class="section-icon">💡</div>
+            計算手順
+          </h2>
+          <div style="background: rgba(66, 153, 225, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary-blue);">
+            <strong>ステップ:</strong><br>
+            1. 質量濃度 (mg/mL) = 薬物量 ÷ 液量<br>
+            2. モル濃度 (mol/L) = 質量濃度 (mg/mL) ÷ 分子量 (g/mol)
+          </div>
+        </section>
+
+        <section class="form-section" id="section-molarity-calc">
+          <h2>
+            <div class="section-icon">🧪</div>
+            薬物量・液量入力
+            <span class="section-status" id="status-molarity-calc"></span>
+          </h2>
+          
+          <div class="input-group">
+            <label for="drug_amount" class="input-label required">薬物量</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="drug_amount" step="0.0001" placeholder="例: 10.0" required inputmode="decimal">
+                  <select id="drug_unit" aria-label="薬物量の単位">
+                    <option value="mg" selected>mg</option>
+                    <option value="g">g</option>
+                    <option value="μg">μg</option>
+                    <option value="ng">ng</option>
+                    <option value="kg">kg</option>
+                  </select>
+                </div>
+                <span class="input-status" id="status-drug-amount"></span>
+                <div class="input-error-message" id="error-drug-amount"></div>
+              </div>
+            </div>
+            <small>薬物の総重量を入力してください</small>
+          </div>
+
+          <div class="input-group">
+            <label for="liquid_volume" class="input-label required">液量（溶媒量）</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="liquid_volume" step="0.0001" placeholder="例: 10.0" required inputmode="decimal">
+                  <select id="liquid_unit" aria-label="液量の単位">
+                    <option value="mL" selected>mL</option>
+                    <option value="L">L</option>
+                    <option value="μL">μL</option>
+                    <option value="nL">nL</option>
+                    <option value="dL">dL</option>
+                  </select>
+                </div>
+                <span class="input-status" id="status-liquid-volume"></span>
+                <div class="input-error-message" id="error-liquid-volume"></div>
+              </div>
+            </div>
+            <small>薬物を溶解する溶媒の体積</small>
+          </div>
+
+          <div id="concentration-display" class="concentration-display" style="display: none;">
+            質量濃度: <span id="concentration-value">-</span> mg/mL
+          </div>
+
+          <div class="input-group">
+            <label for="molecular_weight" class="input-label required">分子量</label>
+            <div class="input-row">
+              <div class="input-with-status">
+                <div class="input-with-unit">
+                  <input type="number" id="molecular_weight" step="0.01" placeholder="例: 300.0" required inputmode="decimal">
+                  <span>g/mol</span>
+                </div>
+                <span class="input-status" id="status-molecular-weight"></span>
+                <div class="input-error-message" id="error-molecular-weight"></div>
+              </div>
+            </div>
+            <small>薬物の分子量（ダルトン値と同じ）</small>
+          </div>
+
+          <div class="input-group">
+            <label for="drug_name" class="input-label">薬物名（任意）</label>
+            <div class="input-row">
+              <input type="text" id="drug_name" placeholder="例: アスピリン" style="width: 100%;">
+            </div>
+            <small>計算結果の表示用</small>
+          </div>
+        </section>
+      </div>
 
       <!-- 計算式表示エリア -->
       <div id="formula-display" class="formula-display" style="display:none;">
@@ -1318,6 +1534,24 @@ let activeStates = {
   formula: false,
   history: false
 };
+let currentCalculationMode = 'stock'; // 'stock' または 'molarity'
+
+// 🎯 モル濃度計算用の単位変換係数
+const drugUnitFactors = {
+  'mg': 1,
+  'g': 1000,
+  'μg': 0.001,
+  'ng': 0.000001,
+  'kg': 1000000
+};
+
+const volumeUnitFactors = {
+  'mL': 1,
+  'L': 1000,
+  'μL': 0.001,
+  'nL': 0.000001,
+  'dL': 100
+};
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
@@ -1327,7 +1561,70 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   loadHistory();
   setupKeyboardShortcuts();
+  setupMolarityCalculationListeners();
+  updateResultsPanelTitle();
 });
+
+// 🎯 results-panelのタイトルをモードに応じて変更
+function updateResultsPanelTitle() {
+  const resultsTitle = document.querySelector('.results-title');
+  if (currentCalculationMode === 'stock') {
+    resultsTitle.innerHTML = '⚗️ 計算結果';
+  } else {
+    resultsTitle.innerHTML = '🧪 モル濃度結果';
+  }
+}
+
+// 🎯 計算モード切替
+function switchCalculationMode(mode) {
+  currentCalculationMode = mode;
+  
+  // タブの状態更新
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`tab-${mode}`).classList.add('active');
+  
+  // モード表示切替
+  document.querySelectorAll('.calculation-mode').forEach(el => el.classList.remove('active'));
+  document.getElementById(`${mode}-mode`).classList.add('active');
+  
+  // 結果をクリア
+  clearModeResults();
+  
+  // 🎯 results-panelのタイトル更新
+  updateResultsPanelTitle();
+  
+  // 計算式の更新
+  if (activeStates.formula) {
+    updateFormulaDisplay();
+  }
+  
+  showFloatingNotification(
+    mode === 'stock' ? 'ストック溶液調製モードに切り替えました' : 'モル濃度計算モードに切り替えました', 
+    'success'
+  );
+  
+  // 🎯 モード切替後に計算を再実行
+  if (mode === 'stock') {
+    updateMainResults();
+  } else {
+    calculateMolarity();
+  }
+}
+
+function clearModeResults() {
+  // results-panelの結果をクリア
+  document.getElementById('results-content').innerHTML = `
+    <div class="results-placeholder">
+      必要項目を入力すると、ここに結果が表示されます
+    </div>
+  `;
+  
+  // モル濃度モードの質量濃度表示をクリア
+  const concentrationDisplay = document.getElementById('concentration-display');
+  if (concentrationDisplay) {
+    concentrationDisplay.style.display = 'none';
+  }
+}
 
 // ダークモード切替
 function toggleTheme() {
@@ -1368,6 +1665,14 @@ function setupKeyboardShortcuts() {
           e.preventDefault();
           exportResults();
           break;
+        case '1':
+          e.preventDefault();
+          switchCalculationMode('stock');
+          break;
+        case '2':
+          e.preventDefault();
+          switchCalculationMode('molarity');
+          break;
       }
     }
   });
@@ -1375,8 +1680,14 @@ function setupKeyboardShortcuts() {
 
 // プリセット適用
 function applyPreset(name, mw) {
-  document.getElementById('mw').value = mw;
-  updateMainResults();
+  if (currentCalculationMode === 'stock') {
+    document.getElementById('mw').value = mw;
+    updateMainResults();
+  } else {
+    document.getElementById('molecular_weight').value = mw;
+    document.getElementById('drug_name').value = name;
+    calculateMolarity();
+  }
   showFloatingNotification(`${name} (MW: ${mw}) がセットされました`, 'success');
 }
 
@@ -1401,25 +1712,31 @@ function showFloatingNotification(message, type = 'info', duration = 3000) {
   }, duration);
 }
 
-// 計算式表示切替（アクティブ状態管理付き）
+// 計算式表示切替
 function toggleFormula() {
-  const formulaDisplay = document.getElementById('formula-display');
-  const formulaBtn = document.getElementById('formula-btn');
+  activeStates.formula = !activeStates.formula;
+  if (activeStates.formula) {
+    updateFormulaDisplay();
+    document.getElementById('formula-display').style.display = 'block';
+    document.getElementById('formula-btn').classList.add('active');
+  } else {
+    document.getElementById('formula-display').style.display = 'none';
+    document.getElementById('formula-btn').classList.remove('active');
+  }
+}
+
+function updateFormulaDisplay() {
   const formulaContent = document.getElementById('formula-content');
   
-  activeStates.formula = !activeStates.formula;
-  
-  if (activeStates.formula) {
+  if (currentCalculationMode === 'stock') {
     formulaContent.innerHTML = `
       <div style="margin-bottom: 1rem;">
         <strong>ストック溶液調製:</strong><br>
-
 
         $$\\text{必要薬量 (g)} = \\text{分子量} \\times \\text{モル濃度} \\times \\text{体積 (L)}$$
       </div>
       <div style="margin-bottom: 1rem;">
         <strong>希釈計算 (C₁V₁ = C₂V₂):</strong><br>
-
 
         $$V_1 = \\frac{C_2 \\times V_2}{C_1}$$
         <br><small>V₁: 必要なストック溶液量, C₁: ストック濃度, C₂: 最終濃度, V₂: 最終体積</small>
@@ -1427,19 +1744,32 @@ function toggleFormula() {
       <div>
         <strong>希釈倍率:</strong><br>
 
-
         $$\\text{希釈倍率} = \\frac{C_1}{C_2}$$
       </div>
     `;
-    formulaDisplay.style.display = 'block';
-    formulaBtn.classList.add('active');
   } else {
-    formulaDisplay.style.display = 'none';
-    formulaBtn.classList.remove('active');
+    formulaContent.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <strong>質量濃度計算:</strong><br>
+
+        $$\\text{質量濃度 (mg/mL)} = \\frac{\\text{薬物量 (mg)}}{\\text{液量 (mL)}}$$
+      </div>
+      <div style="margin-bottom: 1rem;">
+        <strong>モル濃度計算:</strong><br>
+
+        $$\\text{モル濃度 (mol/L)} = \\frac{\\text{質量濃度 (mg/mL)}}{\\text{分子量 (g/mol)}}$$
+      </div>
+      <div>
+        <strong>例:</strong><br>
+        薬物 10 mg を 10 mL に溶解 (MW: 300 g/mol)<br>
+        → 質量濃度: 1.0 mg/mL<br>
+        → モル濃度: 1.0 ÷ 300 ≈ 3.33 mM
+      </div>
+    `;
   }
 }
 
-// 履歴表示切替（アクティブ状態管理付き）
+// 履歴表示切替
 function toggleHistory() {
   const historyPanel = document.getElementById('history-panel');
   const historyBtn = document.getElementById('history-btn');
@@ -1456,62 +1786,111 @@ function toggleHistory() {
   }
 }
 
-// 旧showFormula関数との互換性のため
-function showFormula() {
-  if (!activeStates.formula) {
-    toggleFormula();
-  }
-}
-
 // 履歴保存
 function saveToHistory() {
-  const mw = parseFloat(document.getElementById('mw').value);
-  const molarity = parseFloat(document.getElementById('molarity').value);
-  const volume = parseFloat(document.getElementById('volume').value);
-  
-  if (!isNaN(mw) && !isNaN(molarity) && !isNaN(volume)) {
-    const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
-    const volume_unit = parseFloat(document.getElementById('volume_unit').value);
-    const mass_mg = mw * molarity * molarity_unit * volume * volume_unit * 1000;
+  if (currentCalculationMode === 'stock') {
+    const mw = parseFloat(document.getElementById('mw').value);
+    const molarity = parseFloat(document.getElementById('molarity').value);
+    const volume = parseFloat(document.getElementById('volume').value);
     
-    const historyItem = {
-      timestamp: new Date().toLocaleString('ja-JP'),
-      mw: mw,
-      molarity: molarity,
-      molarity_unit: document.getElementById('molarity_unit').options[document.getElementById('molarity_unit').selectedIndex].text,
-      volume: volume,
-      volume_unit: document.getElementById('volume_unit').options[document.getElementById('volume_unit').selectedIndex].text,
-      mass_mg: mass_mg
-    };
-    
-    calculationHistory.unshift(historyItem);
-    if (calculationHistory.length > 10) {
-      calculationHistory.pop();
+    if (!isNaN(mw) && !isNaN(molarity) && !isNaN(volume)) {
+      const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
+      const volume_unit = parseFloat(document.getElementById('volume_unit').value);
+      const mass_mg = mw * molarity * molarity_unit * volume * volume_unit * 1000;
+      
+      const historyItem = {
+        type: 'stock',
+        timestamp: new Date().toLocaleString('ja-JP'),
+        mw: mw,
+        molarity: molarity,
+        molarity_unit: document.getElementById('molarity_unit').options[document.getElementById('molarity_unit').selectedIndex].text,
+        volume: volume,
+        volume_unit: document.getElementById('volume_unit').options[document.getElementById('volume_unit').selectedIndex].text,
+        mass_mg: mass_mg
+      };
+      
+      calculationHistory.unshift(historyItem);
+      if (calculationHistory.length > 15) {
+        calculationHistory.pop();
+      }
+      
+      localStorage.setItem('molarity-calc-history', JSON.stringify(calculationHistory));
     }
+  } else {
+    // モル濃度計算の履歴保存
+    const drugAmount = parseFloat(document.getElementById('drug_amount').value);
+    const liquidVolume = parseFloat(document.getElementById('liquid_volume').value);
+    const molecularWeight = parseFloat(document.getElementById('molecular_weight').value);
+    const drugName = document.getElementById('drug_name').value;
     
-    localStorage.setItem('molarity-calc-history', JSON.stringify(calculationHistory));
+    if (!isNaN(drugAmount) && !isNaN(liquidVolume) && !isNaN(molecularWeight)) {
+      const drugUnit = document.getElementById('drug_unit').value;
+      const liquidUnit = document.getElementById('liquid_unit').value;
+      
+      const drugAmountInMg = drugAmount * drugUnitFactors[drugUnit];
+      const liquidVolumeInMl = liquidVolume * volumeUnitFactors[liquidUnit];
+      const concentration = drugAmountInMg / liquidVolumeInMl;
+      const molarity = concentration / molecularWeight;
+      
+      const historyItem = {
+        type: 'molarity',
+        timestamp: new Date().toLocaleString('ja-JP'),
+        drugAmount: drugAmount,
+        drugUnit: drugUnit,
+        liquidVolume: liquidVolume,
+        liquidUnit: liquidUnit,
+        molecularWeight: molecularWeight,
+        drugName: drugName || '',
+        concentration: concentration,
+        molarity: molarity
+      };
+      
+      calculationHistory.unshift(historyItem);
+      if (calculationHistory.length > 15) {
+        calculationHistory.pop();
+      }
+      
+      localStorage.setItem('molarity-calc-history', JSON.stringify(calculationHistory));
+    }
   }
 }
 
 // 履歴読み込み
 function loadHistory() {
   const historyContent = document.getElementById('history-content');
-  if (calculationHistory.length === 0) {
+  const modeHistory = calculationHistory.filter(item => 
+    currentCalculationMode === 'stock' ? item.type === 'stock' : item.type === 'molarity'
+  );
+  
+  if (modeHistory.length === 0) {
     historyContent.innerHTML = '<p style="text-align: center; color: var(--muted-text);">履歴がありません</p>';
     return;
   }
   
   let historyHTML = '';
-  calculationHistory.forEach((item, index) => {
-    historyHTML += `
-      <div class="history-item" onclick="loadFromHistory(${index})">
-        <div style="font-size: 0.8rem; color: var(--muted-text);">${item.timestamp}</div>
-        <div><strong>MW:</strong> ${item.mw} g/mol</div>
-        <div><strong>濃度:</strong> ${item.molarity} ${item.molarity_unit}</div>
-        <div><strong>体積:</strong> ${item.volume} ${item.volume_unit}</div>
-        <div><strong>必要薬量:</strong> ${formatNumber(item.mass_mg)} mg</div>
-      </div>
-    `;
+  modeHistory.forEach((item, index) => {
+    if (item.type === 'stock') {
+      historyHTML += `
+        <div class="history-item" onclick="loadFromHistory(${calculationHistory.indexOf(item)})">
+          <div style="font-size: 0.8rem; color: var(--muted-text);">${item.timestamp} [ストック]</div>
+          <div><strong>MW:</strong> ${item.mw} g/mol</div>
+          <div><strong>濃度:</strong> ${item.molarity} ${item.molarity_unit}</div>
+          <div><strong>体積:</strong> ${item.volume} ${item.volume_unit}</div>
+          <div><strong>必要薬量:</strong> ${formatNumber(item.mass_mg)} mg</div>
+        </div>
+      `;
+    } else {
+      const displayName = item.drugName ? ` [${item.drugName}]` : '';
+      historyHTML += `
+        <div class="history-item" onclick="loadFromHistory(${calculationHistory.indexOf(item)})">
+          <div style="font-size: 0.8rem; color: var(--muted-text);">${item.timestamp} [モル濃度]${displayName}</div>
+          <div><strong>薬物:</strong> ${item.drugAmount} ${item.drugUnit}</div>
+          <div><strong>液量:</strong> ${item.liquidVolume} ${item.liquidUnit}</div>
+          <div><strong>MW:</strong> ${item.molecularWeight} g/mol</div>
+          <div><strong>モル濃度:</strong> ${formatMolarityForDisplay(item.molarity)}</div>
+        </div>
+      `;
+    }
   });
   
   historyContent.innerHTML = historyHTML;
@@ -1520,10 +1899,31 @@ function loadHistory() {
 // 履歴から読み込み
 function loadFromHistory(index) {
   const item = calculationHistory[index];
+  
+  if (item.type === 'stock') {
+    if (currentCalculationMode !== 'stock') {
+      switchCalculationMode('stock');
+      setTimeout(() => loadFromHistoryStock(item), 100);
+    } else {
+      loadFromHistoryStock(item);
+    }
+  } else {
+    if (currentCalculationMode !== 'molarity') {
+      switchCalculationMode('molarity');
+      setTimeout(() => loadFromHistoryMolarity(item), 100);
+    } else {
+      loadFromHistoryMolarity(item);
+    }
+  }
+  
+  toggleHistory();
+  showFloatingNotification('履歴から読み込みました', 'success');
+}
+
+function loadFromHistoryStock(item) {
   document.getElementById('mw').value = item.mw;
   document.getElementById('molarity').value = item.molarity;
   
-  // 単位の設定
   const molarityUnit = document.getElementById('molarity_unit');
   for (let i = 0; i < molarityUnit.options.length; i++) {
     if (molarityUnit.options[i].text === item.molarity_unit) {
@@ -1541,10 +1941,17 @@ function loadFromHistory(index) {
   }
   
   document.getElementById('volume').value = item.volume;
-  
   updateMainResults();
-  toggleHistory();
-  showFloatingNotification('履歴から読み込みました', 'success');
+}
+
+function loadFromHistoryMolarity(item) {
+  document.getElementById('drug_amount').value = item.drugAmount;
+  document.getElementById('drug_unit').value = item.drugUnit;
+  document.getElementById('liquid_volume').value = item.liquidVolume;
+  document.getElementById('liquid_unit').value = item.liquidUnit;
+  document.getElementById('molecular_weight').value = item.molecularWeight;
+  document.getElementById('drug_name').value = item.drugName || '';
+  calculateMolarity();
 }
 
 // 履歴クリア
@@ -1560,51 +1967,100 @@ function clearHistory() {
 // 全クリア
 function clearAll() {
   if (confirm('すべての入力をクリアしますか？')) {
-    document.getElementById('mw').value = '';
-    document.getElementById('molarity').value = '';
-    document.getElementById('volume').value = '';
-    document.getElementById('final_molarity').value = '';
-    document.getElementById('final_total_vol').value = '';
-    document.getElementById('cid').value = '';
-    document.getElementById('drug_info').style.display = 'none';
+    if (currentCalculationMode === 'stock') {
+      document.getElementById('mw').value = '';
+      document.getElementById('molarity').value = '';
+      document.getElementById('volume').value = '';
+      document.getElementById('final_molarity').value = '';
+      document.getElementById('final_total_vol').value = '';
+      document.getElementById('cid').value = '';
+      document.getElementById('drug_info').style.display = 'none';
+      updateMainResults();
+    } else {
+      document.getElementById('drug_amount').value = '';
+      document.getElementById('liquid_volume').value = '';
+      document.getElementById('molecular_weight').value = '';
+      document.getElementById('drug_name').value = '';
+      calculateMolarity();
+    }
     
     // アクティブ状態もリセット
     if (activeStates.formula) toggleFormula();
     if (activeStates.history) toggleHistory();
     
-    updateMainResults();
+    clearModeResults();
     showFloatingNotification('すべてクリアしました', 'success');
   }
 }
 
-// 結果エクスポート
+// 🎯 結果エクスポート関数を更新
 function exportResults() {
-  const mw = parseFloat(document.getElementById('mw').value);
-  const molarity = parseFloat(document.getElementById('molarity').value);
-  const volume = parseFloat(document.getElementById('volume').value);
+  const resultsContent = document.getElementById('results-content');
+  const hasResults = !resultsContent.querySelector('.results-placeholder');
   
-  if (isNaN(mw) || isNaN(molarity) || isNaN(volume)) {
+  if (!hasResults) {
     showFloatingNotification('計算結果がありません', 'error');
     return;
   }
   
-  // PDFエクスポートをシミュレート（実際の実装ではPDF.jsなどを使用）
-  const results = document.getElementById('results-content').innerHTML;
   const printWindow = window.open('', '_blank');
+  const modeTitle = currentCalculationMode === 'stock' ? 'ストック溶液調製' : 'モル濃度計算';
+  const results = resultsContent.innerHTML;
+  
   printWindow.document.write(`
     <html>
       <head>
-        <title>YoshinovaCalc Lab 計算結果</title>
+        <title>YoshinovaCalc Lab ${modeTitle}結果</title>
         <style>
-          body { font-family: 'Inter', sans-serif; margin: 20px; }
-          .header { text-align: center; margin-bottom: 30px; }
-          .results { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+          body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 20px; 
+            color: #333;
+          }
+          .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #4299e1;
+            padding-bottom: 20px;
+          }
+          .results { 
+            border: 1px solid #ccc; 
+            padding: 20px; 
+            border-radius: 8px; 
+            background: #f9f9f9;
+          }
+          .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+          }
+          .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+          }
+          .result-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .result-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1e293b;
+          }
         </style>
       </head>
       <body>
         <div class="header">
-          <h1>🧬 YoshinovaCalc Lab V2.0 🧬</h1>
-          <p>計算結果 - ${new Date().toLocaleString('ja-JP')}</p>
+          <h1>🧬 YoshinovaCalc Lab V2.1 🧬</h1>
+          <p>${modeTitle}結果 - ${new Date().toLocaleString('ja-JP')}</p>
         </div>
         <div class="results">
           ${results}
@@ -1616,7 +2072,155 @@ function exportResults() {
   printWindow.print();
 }
 
-// 🎯 大幅に改善されたエラー・ステータス管理関数
+// 🎯 モル濃度計算の実装（results-panel統一版）
+function setupMolarityCalculationListeners() {
+  const molarityInputs = ['drug_amount', 'drug_unit', 'liquid_volume', 'liquid_unit', 'molecular_weight', 'drug_name'];
+  molarityInputs.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener('input', calculateMolarity);
+      element.addEventListener('change', calculateMolarity);
+    }
+  });
+}
+
+function formatNumber(num) {
+  if (num === 0) return "0";
+  if (Math.abs(num) >= 100) return num.toFixed(1);
+  if (Math.abs(num) >= 10) return num.toFixed(2);
+  if (Math.abs(num) >= 1) return num.toFixed(3);
+  if (Math.abs(num) >= 0.1) return num.toFixed(3);
+  return num.toFixed(4);
+}
+
+function formatMolarityForDisplay(molarity) {
+  let displayValue, unit;
+  if (molarity >= 1) {
+    displayValue = formatNumber(molarity);
+    unit = 'M';
+  } else if (molarity >= 0.001) {
+    displayValue = formatNumber(molarity * 1000);
+    unit = 'mM';
+  } else if (molarity >= 0.000001) {
+    displayValue = formatNumber(molarity * 1000000);
+    unit = 'μM';
+  } else {
+    displayValue = formatNumber(molarity * 1000000000);
+    unit = 'nM';
+  }
+  return `${displayValue} ${unit}`;
+}
+
+function calculateMolarity() {
+  if (currentCalculationMode !== 'molarity') return;
+  
+  const drugAmount = parseFloat(document.getElementById('drug_amount').value);
+  const drugUnit = document.getElementById('drug_unit').value;
+  const liquidVolume = parseFloat(document.getElementById('liquid_volume').value);
+  const liquidUnit = document.getElementById('liquid_unit').value;
+  const molecularWeight = parseFloat(document.getElementById('molecular_weight').value);
+  const drugName = document.getElementById('drug_name').value;
+  
+  const concentrationDisplay = document.getElementById('concentration-display');
+  const concentrationValue = document.getElementById('concentration-value');
+  const resultsContent = document.getElementById('results-content');
+  
+  // 入力値検証
+  if (isNaN(drugAmount) || isNaN(liquidVolume) || drugAmount <= 0 || liquidVolume <= 0) {
+    concentrationDisplay.style.display = 'none';
+    resultsContent.innerHTML = `
+      <div class="results-placeholder">
+        必要項目を入力すると、ここに結果が表示されます
+      </div>
+    `;
+    updateSectionStatus('molarity-calc', '');
+    return;
+  }
+  
+  try {
+    // 単位変換
+    const drugAmountInMg = drugAmount * drugUnitFactors[drugUnit];
+    const liquidVolumeInMl = liquidVolume * volumeUnitFactors[liquidUnit];
+    
+    // 質量濃度計算 (mg/mL)
+    const concentration = drugAmountInMg / liquidVolumeInMl;
+    
+    // 質量濃度表示（左側）
+    concentrationValue.textContent = formatNumber(concentration);
+    concentrationDisplay.style.display = 'block';
+    
+    // モル濃度計算
+    if (!isNaN(molecularWeight) && molecularWeight > 0) {
+      const molarity = concentration / molecularWeight;
+      const molarityDisplayValue = formatMolarityForDisplay(molarity);
+      
+      // 🎯 右側results-panelに統一表示
+      const drugDisplay = drugName ? drugName : '化合物';
+      
+      resultsContent.innerHTML = `
+        <div class="results-grid">
+          <div class="result-item">
+            <div class="result-label">質量濃度</div>
+            <div class="result-value">${formatNumber(concentration)} mg/mL</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">モル濃度</div>
+            <div class="result-value">${molarityDisplayValue}</div>
+          </div>
+          <div class="result-item" style="grid-column: 1 / -1;">
+            <div class="result-label">調製条件</div>
+            <div class="result-value" style="font-size: 0.9rem;">${drugAmount} ${drugUnit} ÷ ${liquidVolume} ${liquidUnit}</div>
+          </div>
+          <div class="result-item" style="grid-column: 1 / -1;">
+            <div class="result-label">薬物情報</div>
+            <div class="result-value" style="font-size: 0.9rem;">
+              ${drugDisplay} (MW: ${molecularWeight} g/mol)
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(255, 255, 255, 0.3); border-radius: 8px; font-size: 0.8rem; color: var(--muted-text);">
+          <strong>💡 計算過程:</strong><br>
+          1. 質量濃度 = ${formatNumber(drugAmountInMg)} mg ÷ ${formatNumber(liquidVolumeInMl)} mL = ${formatNumber(concentration)} mg/mL<br>
+          2. モル濃度 = ${formatNumber(concentration)} ÷ ${molecularWeight} = ${formatNumber(molarity, 4)} mol/L<br>
+          3. 詳細値: ${molarity.toExponential(3)} mol/L
+        </div>
+      `;
+      
+      updateSectionStatus('molarity-calc', 'completed');
+      saveToHistory();
+    } else {
+      // 分子量未入力時
+      resultsContent.innerHTML = `
+        <div class="results-grid">
+          <div class="result-item">
+            <div class="result-label">質量濃度</div>
+            <div class="result-value">${formatNumber(concentration)} mg/mL</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">モル濃度</div>
+            <div class="result-value" style="color: var(--muted-text);">分子量を入力</div>
+          </div>
+          <div class="result-item" style="grid-column: 1 / -1;">
+            <div class="result-label">調製条件</div>
+            <div class="result-value" style="font-size: 0.9rem;">${drugAmount} ${drugUnit} ÷ ${liquidVolume} ${liquidUnit}</div>
+          </div>
+        </div>
+      `;
+      updateSectionStatus('molarity-calc', '');
+    }
+    
+  } catch (error) {
+    resultsContent.innerHTML = `
+      <div class="results-placeholder" style="color: var(--error-color); border-color: var(--error-color);">
+        ⚠️ 計算エラーが発生しました。入力値を確認してください。
+      </div>
+    `;
+    updateSectionStatus('molarity-calc', 'error');
+  }
+}
+
+// 🎯 既存の関数群（ストック溶液計算用）
+
 function setInputError(inputId, message, isWarning = false) {
   const errorEl = document.getElementById('error-' + inputId.replace('_','-'));
   const inputEl = document.getElementById(inputId);
@@ -1625,10 +2229,9 @@ function setInputError(inputId, message, isWarning = false) {
     errorEl.textContent = message || '';
     errorEl.className = isWarning ? 'input-warning-message' : 'input-error-message';
     
-    // メッセージが追加/変更された時のアニメーション効果
     if (message) {
       errorEl.style.animation = 'none';
-      errorEl.offsetHeight; // リフロー強制
+      errorEl.offsetHeight;
       errorEl.style.animation = 'bounceIn 0.4s ease-out';
     }
   }
@@ -1640,7 +2243,6 @@ function setInputError(inputId, message, isWarning = false) {
     }
   }
   
-  // セクション全体の状態更新
   updateSectionVisualState(inputId, message, isWarning);
 }
 
@@ -1659,7 +2261,6 @@ function updateSectionVisualState(inputId, hasMessage, isWarning) {
   const sectionEl = document.getElementById(`section-${sectionName}`);
   if (!sectionEl) return;
   
-  // セクション内のすべてのエラー/警告をチェック
   const hasErrors = sectionEl.querySelector('.input-error-message:not(:empty)');
   const hasWarnings = sectionEl.querySelector('.input-warning-message:not(:empty)');
   
@@ -1725,10 +2326,11 @@ function formatMassCustomUnit(value_mg, selectedUnit) {
 }
 
 function validateInputs() {
+  if (currentCalculationMode !== 'stock') return { warnings: [], errors: [] };
+  
   const warnings = [];
   const errors = [];
   
-  // 全エラーメッセージをクリア
   ['mw','molarity','volume','final-molarity','final-total-vol'].forEach(id => setInputError(id, ""));
   
   const mw = parseFloat(document.getElementById('mw').value);
@@ -1910,17 +2512,6 @@ function validateInputs() {
   return { warnings, errors };
 }
 
-function formatNumber(num) {
-  if (num === 0) return "0";
-  if (Math.abs(num) >= 1) {
-    return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
-  } else if (Math.abs(num) >= 0.01) {
-    return num.toLocaleString(undefined, { maximumFractionDigits: 4 });
-  } else {
-    return num.toFixed(5).replace(/0+$/,"").replace(/\.$/,"");
-  }
-}
-
 function formatVolumeSI(value_ul) {
   if (value_ul >= 1e6) {
     return `${formatNumber(value_ul / 1e6)} L`;
@@ -1938,6 +2529,8 @@ function formatVolumeSI(value_ul) {
 }
 
 function updateMainResults() {
+  if (currentCalculationMode !== 'stock') return;
+  
   const mw = parseFloat(document.getElementById('mw').value);
   const molarity = parseFloat(document.getElementById('molarity').value);
   const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
@@ -1970,7 +2563,7 @@ function updateMainResults() {
         </div>`;
     
     hasResults = true;
-    saveToHistory(); // 履歴に保存
+    saveToHistory();
     
     let stockResult = `<strong>ストック溶液調製:</strong> 薬 ${massDisplay} + 溶媒 ${formatVolumeSI(solvent_ul)}`;
     if (mass_mg < 1) {
@@ -2055,18 +2648,17 @@ function showSectionResult(containerId, content) {
   }
 }
 
-// イベントリスナー設定
+// イベントリスナー設定（ストック溶液用）
 [
   "mw","molarity","molarity_unit","volume","volume_unit","mass_unit",
   "final_molarity","final_molarity_unit","final_total_vol","final_total_vol_unit"
 ].forEach(id => {
-  if(document.getElementById(id)){
-    document.getElementById(id).addEventListener('input', updateMainResults);
-    document.getElementById(id).addEventListener('change', updateMainResults);
+  const element = document.getElementById(id);
+  if (element) {
+    element.addEventListener('input', updateMainResults);
+    element.addEventListener('change', updateMainResults);
   }
 });
-
-updateMainResults();
 
 function fetchPubChem() {
   const cid = document.getElementById('cid').value.trim();
@@ -2095,7 +2687,15 @@ function fetchPubChem() {
       const prop = data.PropertyTable.Properties[0];
       
       if (prop.CID) document.getElementById('cid').value = prop.CID;
-      if (prop.MolecularWeight) document.getElementById('mw').value = prop.MolecularWeight;
+      
+      if (currentCalculationMode === 'stock') {
+        if (prop.MolecularWeight) document.getElementById('mw').value = prop.MolecularWeight;
+        updateMainResults();
+      } else {
+        if (prop.MolecularWeight) document.getElementById('molecular_weight').value = prop.MolecularWeight;
+        if (prop.Title) document.getElementById('drug_name').value = prop.Title;
+        calculateMolarity();
+      }
       
       let infoHTML = "<table class='info-table' role='table'>";
       infoHTML += "<caption class='sr-only'>取得した薬物情報</caption>";
@@ -2109,7 +2709,6 @@ function fetchPubChem() {
       document.getElementById('drug_info').innerHTML = infoHTML;
       document.getElementById('drug_info').style.display = "block";
       updateSectionStatus('search', 'completed');
-      updateMainResults();
       showFloatingNotification(`化合物情報を取得しました: ${prop.Title || 'CID ' + prop.CID}`, 'success');
     })
     .catch(error => {
@@ -2122,6 +2721,9 @@ function fetchPubChem() {
       searchButton.disabled = false;
     });
 }
+
+// 初期計算実行
+updateMainResults();
 </script>
 </body>
 </html>
