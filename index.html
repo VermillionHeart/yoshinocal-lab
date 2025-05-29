@@ -1630,24 +1630,24 @@ function initializeResultsMinimizeButton() {
   }
 
 function setResultsPanelMinimized(minimized) {
-  const resultsTitle = document.querySelector('.results-title'); // ← 追加
-
+  const resultsTitle = document.querySelector('.results-title');
   if (minimized) {
     resultsPanel.classList.add('minimized');
     minimizeIcon.textContent = '▲';
     minimizeBtn.title = '結果パネルを元に戻す';
     minimizeBtn.setAttribute('aria-label', '結果パネルを元に戻す');
-    // ↓ タイトル書き換え
-    resultsTitle.textContent = '▲ 計算結果を開く';
+    // 必ず innerHTML で書き換え
+    resultsTitle.innerHTML = '▲ 計算結果を開く';
     localStorage.setItem('results-panel-minimized', 'true');
   } else {
     resultsPanel.classList.remove('minimized');
     minimizeIcon.textContent = '▼';
     minimizeBtn.title = '結果パネルを最小化';
     minimizeBtn.setAttribute('aria-label', '結果パネルを最小化');
-    // ↓ 通常タイトル（モードで分岐）
-    resultsTitle.textContent = 
-      (currentCalculationMode === 'stock') ? '⚗️ 計算結果' : '🧪 モル濃度結果';
+    // モードによってタイトル復元
+    resultsTitle.innerHTML = (currentCalculationMode === 'stock')
+      ? '⚗️ 計算結果'
+      : '🧪 モル濃度結果';
     localStorage.setItem('results-panel-minimized', 'false');
   }
 }
@@ -1690,6 +1690,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // 🎯 results-panelのタイトルをモードに応じて変更
 function updateResultsPanelTitle() {
   const resultsTitle = document.querySelector('.results-title');
+  // もし最小化中なら何もしない
+  if (document.getElementById('results-panel').classList.contains('minimized')) return;
   if (currentCalculationMode === 'stock') {
     resultsTitle.innerHTML = '⚗️ 計算結果';
   } else {
