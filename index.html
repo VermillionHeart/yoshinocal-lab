@@ -1140,9 +1140,16 @@
       }
 
       .results-panel.minimized {
-        transform: translateY(65%);
-        max-height: 56px !important;
-      }
+  	transform: translateY(0%);
+  	max-height: 56px !important;
+  	min-height: 44px;
+  	opacity: 0.97;
+  	pointer-events: auto;
+  	bottom: 0;
+  	left: 0;
+  	right: 0;
+	}
+
 
       .results-minimize-btn {
         width: 44px;
@@ -1654,6 +1661,10 @@ function setResultsPanelMinimized(minimized) {
 
   // クリックイベントの設定
   minimizeBtn.addEventListener('click', function(event) {
+  if (resultsPanel.classList.contains('minimized')) {
+    setResultsPanelMinimized(false);
+  }
+});
     event.preventDefault();
     event.stopPropagation();
     const isCurrentlyMinimized = resultsPanel.classList.contains('minimized');
