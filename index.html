@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -760,6 +760,7 @@
       padding: 1.5rem;
       z-index: 999;
       animation: slideInRight 0.6s ease-out;
+      transition: transform 0.3s cubic-bezier(.4,2,.6,1), max-height 0.4s ease;
     }
 
     @keyframes slideInRight {
@@ -771,6 +772,51 @@
         opacity: 1;
         transform: translateX(0);
       }
+    }
+
+    .results-panel.minimized {
+      transform: translateY(75%);
+      max-height: 62px !important;
+      min-height: 44px;
+      overflow: hidden;
+      opacity: 0.8;
+      pointer-events: auto;
+    }
+
+    .results-panel.minimized .results-title {
+      border-bottom: none;
+    }
+
+    .results-minimize-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      background: var(--glass-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-blue);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 8px rgba(66,153,225,0.12);
+      backdrop-filter: var(--backdrop-blur);
+    }
+
+    .results-minimize-btn:hover {
+      background: var(--primary-blue);
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+    }
+
+    .results-minimize-btn:active {
+      transform: scale(0.95);
     }
 
     .results-title {
@@ -1091,6 +1137,19 @@
         box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
         padding: 1.5rem 1rem 2rem 1rem;
         animation: slideInUp 0.6s ease-out;
+      }
+
+      .results-panel.minimized {
+        transform: translateY(65%);
+        max-height: 56px !important;
+      }
+
+      .results-minimize-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 2rem;
+        top: 8px;
+        right: 8px;
       }
 
       .results-grid {
@@ -1511,6 +1570,13 @@
 
   <!-- 計算結果パネル：PC右上/スマホ下部に追従 -->
   <div class="results-panel" id="results-panel">
+    <button id="results-minimize-btn"
+            class="results-minimize-btn"
+            title="結果パネルを最小化"
+            aria-label="結果パネルを最小化"
+            type="button">
+      <span id="results-minimize-icon">▼</span>
+    </button>
     <div class="results-title">⚗️ 計算結果</div>
     <div id="results-content">
       <div class="results-placeholder">
@@ -1552,16 +1618,66 @@ const volumeUnitFactors = {
   'dL': 100
 };
 
+// 🎯 完全に修正された最小化ボタン機能
+function initializeResultsMinimizeButton() {
+  const resultsPanel = document.getElementById('results-panel');
+  const minimizeBtn = document.getElementById('results-minimize-btn');
+  const minimizeIcon = document.getElementById('results-minimize-icon');
+
+  if (!resultsPanel || !minimizeBtn || !minimizeIcon) {
+    console.error('結果パネルまたは最小化ボタンの要素が見つかりません');
+    return;
+  }
+
+  function setResultsPanelMinimized(minimized) {
+    if (minimized) {
+      resultsPanel.classList.add('minimized');
+      minimizeIcon.textContent = '▲';
+      minimizeBtn.title = '結果パネルを元に戻す';
+      minimizeBtn.setAttribute('aria-label', '結果パネルを元に戻す');
+      localStorage.setItem('results-panel-minimized', 'true');
+    } else {
+      resultsPanel.classList.remove('minimized');
+      minimizeIcon.textContent = '▼';
+      minimizeBtn.title = '結果パネルを最小化';
+      minimizeBtn.setAttribute('aria-label', '結果パネルを最小化');
+      localStorage.setItem('results-panel-minimized', 'false');
+    }
+  }
+
+  // クリックイベントの設定
+  minimizeBtn.addEventListener('click', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const isCurrentlyMinimized = resultsPanel.classList.contains('minimized');
+    setResultsPanelMinimized(!isCurrentlyMinimized);
+  });
+
+  // 初期状態の復元
+  const shouldBeMinimized = localStorage.getItem('results-panel-minimized') === 'true';
+  setResultsPanelMinimized(shouldBeMinimized);
+  
+  console.log('結果パネルの最小化ボタンが正常に初期化されました');
+}
+
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM読み込み完了、初期化開始...');
+  
   if (isDarkMode) {
     document.body.setAttribute('data-theme', 'dark');
     document.getElementById('theme-icon').textContent = '🔬';
   }
+  
   loadHistory();
   setupKeyboardShortcuts();
   setupMolarityCalculationListeners();
   updateResultsPanelTitle();
+  
+  // 🎯 最小化ボタンの初期化（修正版）
+  initializeResultsMinimizeButton();
+  
+  console.log('初期化完了');
 });
 
 // 🎯 results-panelのタイトルをモードに応じて変更
@@ -1749,6 +1865,7 @@ function updateFormulaDisplay() {
       <div style="margin-top:0.5rem;">
         <strong>入力値を代入:</strong><br>
 
+
         $$V_1 = \\frac{${C2} \\times ${V2}}{${C1}} = ${V1.toFixed(2)}\\ \\mu\\mathrm{L}$$
       </div>
     `;
@@ -1761,11 +1878,13 @@ function updateFormulaDisplay() {
     <div style="margin-bottom: 1rem;">
       <strong>ストック溶液調製:</strong><br>
 
+
       $$\\text{必要薬量 (g)} = \\text{分子量} \\times \\text{モル濃度} \\times \\text{体積 (L)}$$
       ...（ストック計算の数値代入パートは上の指示どおり反映済みでOK）...
     </div>
     <div style="margin-bottom: 1rem;">
       <strong>希釈計算 (C₁V₁ = C₂V₂):</strong><br>
+
 
       $$V_1 = \\frac{C_2 \\times V_2}{C_1}$$
       <br><small>V₁: 必要なストック溶液量, C₁: ストック濃度, C₂: 最終濃度, V₂: 最終体積</small>
@@ -1773,6 +1892,7 @@ function updateFormulaDisplay() {
     </div>
     <div>
       <strong>希釈倍率:</strong><br>
+
 
       $$\\text{希釈倍率} = \\frac{C_1}{C_2}$$
       ${factorDetail}
@@ -1784,10 +1904,12 @@ function updateFormulaDisplay() {
       <div style="margin-bottom: 1rem;">
         <strong>質量濃度計算:</strong><br>
 
+
         $$\\text{質量濃度 (mg/mL)} = \\frac{\\text{薬物量 (mg)}}{\\text{液量 (mL)}}$$
       </div>
       <div style="margin-bottom: 1rem;">
         <strong>モル濃度計算:</strong><br>
+
 
         $$\\text{モル濃度 (mol/L)} = \\frac{\\text{質量濃度 (mg/mL)}}{\\text{分子量 (g/mol)}}$$
       </div>
@@ -2611,8 +2733,7 @@ function updateMainResults() {
       !isNaN(final_total_vol) && final_total_vol > 0) {
     const C1 = molarity * molarity_unit;
     const C2 = final_molarity * final_molarity_unit;
-    const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1);
-    const V1 = (C2 * V2 / 1e6) / C1 * 1e6;
+    const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1);const V1 = (C2 * V2 / 1e6) / C1 * 1e6;
     const V1_fixed = Math.max(0, V1);
     const diluent_uL = V2 - V1_fixed;
     
