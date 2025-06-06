@@ -1265,11 +1265,11 @@
       </div>
       <h1>
         <span class="labicon" aria-hidden="true">🧬</span>
-        YoshinovaCalc Lab
+        YoshinovaCalc Lab V1.1
         <span class="labicon" aria-hidden="true">⚗️</span>
       </h1>
       <div class="copyright">
-        © 2025 Fumihiko Yoshino. All Rights Reserved. Update:2025-05-29
+        © 2025 Fumihiko Yoshino. All Rights Reserved. Update:2025-06-06
       </div>
     </header>
 
@@ -1865,86 +1865,137 @@ function toggleFormula() {
 function updateFormulaDisplay() {
   const formulaContent = document.getElementById('formula-content');
 
- if (currentCalculationMode === 'stock') {
-  // --- ここから追記 ---
-  // 希釈用入力値の取得
-  const molarity = parseFloat(document.getElementById('molarity').value);
-  const molarity_unit = parseFloat(document.getElementById('molarity_unit').value);
-  const final_molarity = parseFloat(document.getElementById('final_molarity').value);
-  const final_molarity_unit = parseFloat(document.getElementById('final_molarity_unit').value);
-  const final_total_vol = parseFloat(document.getElementById('final_total_vol').value);
-  const final_total_vol_unit = parseFloat(document.getElementById('final_total_vol_unit').value);
+  if (currentCalculationMode === 'stock') {
+    // 入力値取得
+    const mw = document.getElementById('mw').value;
+    const molarity = document.getElementById('molarity').value;
+    const molarity_unit_el = document.getElementById('molarity_unit');
+    const molarity_unit_txt = molarity_unit_el.options[molarity_unit_el.selectedIndex].text;
+    const molarity_unit_val = parseFloat(molarity_unit_el.value);
+    const volume = document.getElementById('volume').value;
+    const volume_unit_el = document.getElementById('volume_unit');
+    const volume_unit_txt = volume_unit_el.options[volume_unit_el.selectedIndex].text;
+    const volume_unit_val = parseFloat(volume_unit_el.value);
 
-  // 計算
-  const C1 = molarity * molarity_unit;
-  const C2 = final_molarity * final_molarity_unit;
-  const V2 = final_total_vol * (final_total_vol_unit === 1 ? 1000 : 1); // μL単位
-  let dilutionDetail = '<span style="color:#718096;">（最終濃度と希釈後総量を両方入れると計算過程を表示します）</span>';
-  let factorDetail = '';
-  if (!isNaN(C1) && C1 > 0 && !isNaN(C2) && C2 > 0 && !isNaN(V2) && V2 > 0) {
-    const V1 = (C2 * V2) / C1;
-    dilutionDetail = `
-      <div style="margin-top:0.5rem;">
-        <strong>入力値を代入:</strong><br>
+    // 希釈計算用
+    const final_molarity = document.getElementById('final_molarity').value;
+    const final_molarity_unit = document.getElementById('final_molarity_unit');
+    const final_molarity_unit_txt = final_molarity_unit.options[final_molarity_unit.selectedIndex].text;
+    const final_total_vol = document.getElementById('final_total_vol').value;
+    const final_total_vol_unit = document.getElementById('final_total_vol_unit');
+    const final_total_vol_unit_txt = final_total_vol_unit.options[final_total_vol_unit.selectedIndex].text;
 
+    // 体積L換算
+    let volume_L = "";
+    if (volume && volume_unit_val) {
+      volume_L = (parseFloat(volume) * volume_unit_val).toFixed(6);
+    }
 
-        $$V_1 = \\frac{${C2} \\times ${V2}}{${C1}} = ${V1.toFixed(2)}\\ \\mu\\mathrm{L}$$
-      </div>
-    `;
-    factorDetail = `<br>$$= \\frac{${C1}}{${C2}} = ${(C1/C2).toFixed(2)}$$`;
-  }
+    // モル濃度mol/L換算
+    let molarity_molL = "";
+    if (molarity && molarity_unit_val) {
+      molarity_molL = (parseFloat(molarity) * molarity_unit_val).toExponential(6);
+    }
 
-  // --- ここまで追記 ---
+    // 必要薬量（g）計算
+    let mass = "";
+    if (mw && molarity && molarity_unit_val && volume && volume_unit_val) {
+      mass = (parseFloat(mw) * parseFloat(molarity) * molarity_unit_val * parseFloat(volume) * volume_unit_val).toFixed(6);
+    }
 
-  formulaContent.innerHTML = `
-    <div style="margin-bottom: 1rem;">
-      <strong>ストック溶液調製:</strong><br>
+    // 必要薬量の例
+    let stockExample = '';
+    if (mw && molarity && volume) {
+      stockExample = `
+        <div style="margin-top:0.6em;">
+          例: <b>${mw}</b> (g/mol) × <b>${molarity}</b> (${molarity_unit_txt}) × <b>${volume}</b> (${volume_unit_txt})
+          <br>＝ <b>${mw}</b> (g/mol) × <b>${molarity_molL}</b> (mol/L) × <b>${volume_L}</b> (L)
+          <br>＝ <span style="color:#38a169;font-weight:bold;">${mass} g</span>
+        </div>
+        <div style="color:#555;font-size:0.95em;">
+          ※体積・濃度は自動でSI単位(L, mol/L)に換算
+        </div>
+      `;
+    }
 
+    // 希釈計算の例
+    let dilutionExample = '';
+    if (final_molarity && final_total_vol && molarity) {
+      dilutionExample = `
+        <div style="margin-top:0.6em;">
+          例: <b>${final_molarity}</b> × <b>${final_total_vol}</b> ÷ <b>${molarity}</b> = <span style="color:#3182ce;font-weight:bold;">${(final_molarity * final_total_vol / molarity).toFixed(3)}</span>
+        </div>
+        <div style="color:#718096;font-size:0.9em;">[単位: ${final_molarity_unit_txt}, ${final_total_vol_unit_txt}, ${molarity_unit_txt}]</div>
+      `;
+    }
 
-      $$\\text{必要薬量 (g)} = \\text{分子量} \\times \\text{モル濃度} \\times \\text{体積 (L)}$$
-      ...（ストック計算の数値代入パートは上の指示どおり反映済みでOK）...
-    </div>
-    <div style="margin-bottom: 1rem;">
-      <strong>希釈計算 (C₁V₁ = C₂V₂):</strong><br>
+    // 希釈倍率の例
+    let factorExample = '';
+    if (molarity && final_molarity) {
+      factorExample = `
+        <div style="margin-top:0.6em;">
+          例: <b>${molarity}</b> ÷ <b>${final_molarity}</b> = <span style="color:#ed8936;font-weight:bold;">${(molarity / final_molarity).toFixed(2)} 倍</span>
+        </div>
+      `;
+    }
 
-
-      $$V_1 = \\frac{C_2 \\times V_2}{C_1}$$
-      <br><small>V₁: 必要なストック溶液量, C₁: ストック濃度, C₂: 最終濃度, V₂: 最終体積</small>
-      ${dilutionDetail}
-    </div>
-    <div>
-      <strong>希釈倍率:</strong><br>
-
-
-      $$\\text{希釈倍率} = \\frac{C_1}{C_2}$$
-      ${factorDetail}
-    </div>
-  `;
-} else {
-    // ここはモル濃度モードなのでそのまま
+    // ここでまとめてHTMLにセット
     formulaContent.innerHTML = `
-      <div style="margin-bottom: 1rem;">
-        <strong>質量濃度計算:</strong><br>
-
-
-        $$\\text{質量濃度 (mg/mL)} = \\frac{\\text{薬物量 (mg)}}{\\text{液量 (mL)}}$$
+      <div style="margin-bottom:1.5em;">
+        <span style="font-weight:bold;">
+          必要薬量 (g) = 分子量 (g/mol) × モル濃度 (mol/L) × 体積 (L)
+        </span>
+        ${stockExample}
       </div>
-      <div style="margin-bottom: 1rem;">
-        <strong>モル濃度計算:</strong><br>
-
-
-        $$\\text{モル濃度 (mol/L)} = \\frac{\\text{質量濃度 (mg/mL)}}{\\text{分子量 (g/mol)}}$$
+      <div style="margin-bottom:1.5em;">
+        <span style="font-weight:bold;">希釈計算: V<sub>1</sub> = (C<sub>2</sub> × V<sub>2</sub>) ÷ C<sub>1</sub></span>
+        ${dilutionExample}
+        <div style="color:#718096;font-size:0.9em;">V<sub>1</sub>: 必要なストック溶液量, C<sub>1</sub>: ストック濃度, C<sub>2</sub>: 最終濃度, V<sub>2</sub>: 最終体積</div>
       </div>
       <div>
-        <strong>例:</strong><br>
-        薬物 10 mg を 10 mL に溶解 (MW: 300 g/mol)<br>
-        → 質量濃度: 1.0 mg/mL<br>
-        → モル濃度: 1.0 ÷ 300 ≈ 3.33 mM
+        <span style="font-weight:bold;">希釈倍率 = ストック濃度 ÷ 最終濃度</span>
+        ${factorExample}
+      </div>
+    `;
+  } else {
+    // モル濃度計算モード
+    const drug_amount = document.getElementById('drug_amount').value;
+    const drug_unit = document.getElementById('drug_unit').value;
+    const liquid_volume = document.getElementById('liquid_volume').value;
+    const liquid_unit = document.getElementById('liquid_unit').value;
+    const molecular_weight = document.getElementById('molecular_weight').value;
+
+    let step1 = '';
+    if (drug_amount && liquid_volume) {
+      step1 = `
+        <div style="margin-top:0.6em;">
+          例: <b>${drug_amount}</b> ÷ <b>${liquid_volume}</b> = <span style="color:#38a169;font-weight:bold;">${(drug_amount / liquid_volume).toFixed(3)}</span>
+        </div>
+        <div style="color:#718096;font-size:0.9em;">[単位: ${drug_unit}, ${liquid_unit}]</div>
+      `;
+    }
+    let step2 = '';
+    if (drug_amount && liquid_volume && molecular_weight) {
+      step2 = `
+        <div style="margin-top:0.6em;">
+          例: ${drug_amount / liquid_volume} ÷ ${molecular_weight} = <span style="color:#3182ce;font-weight:bold;">${((drug_amount / liquid_volume) / molecular_weight).toExponential(3)}</span>
+        </div>
+        <div style="color:#718096;font-size:0.9em;">[単位: mol/L]</div>
+      `;
+    }
+
+    formulaContent.innerHTML = `
+      <div style="margin-bottom:1.5em;">
+        <span style="font-weight:bold;">質量濃度 = 薬物量 ÷ 液量</span>
+        ${step1}
+      </div>
+      <div>
+        <span style="font-weight:bold;">モル濃度 = 質量濃度 ÷ 分子量</span>
+        ${step2}
       </div>
     `;
   }
 }
-
 
 // 履歴表示切替
 function toggleHistory() {
