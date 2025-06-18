@@ -557,7 +557,27 @@
       border-radius: 8px;
       padding: 0.5rem 0.8rem;
       font-size: 0.9rem;
-      color: var(--secondary-text);
+      color: var(--primary-text);
+/*――――――――――――――――――――――――――――――――――*/
+/* プルダウン一覧のオプションを高コントラスト化 */
+ .input-with-unit select option {
+   /* 背景はパネルと同じ色でテキストは本文色 */
+   background: var(--panel-bg);
+   color: var(--primary-text);
+ }
+
+/* 選択中アイテムのバックグラウンド＆文字色 */
+ .input-with-unit select option:checked {
+   background-color: var(--primary-blue);
+   color: #ffffff;
+ }
+
+/* ホバー時の強調表示 */
+ .input-with-unit select option:hover {
+   background-color: var(--primary-blue-hover);
+   color: #ffffff;
+ }
+/*――――――――――――――――――――――――――――――――――*/
       font-weight: 500;
       cursor: pointer;
       outline: none;
@@ -571,6 +591,11 @@
       min-width: 40px;
       text-align: center;
     }
+    /* 🎯 ストック溶液 調整の「表示単位」を体積単位と同じ色に */
+    #mass_unit {
+      color: var(--muted-text);
+    }
+
 
     input, select {
       font-size: 1rem;
@@ -1271,7 +1296,6 @@
   </style>
 </head>
 <body>
-<button id="theme-btn" class="theme-toggle" aria-label="テーマ切替">💊</button>
   <div class="container">
     <header class="header">
       <div class="theme-toggle" onclick="toggleTheme()" title="テーマ切替 (Ctrl+D)">
@@ -2942,30 +2966,6 @@ updateMainResults();
         URL.createObjectURL(new Blob([swCode], { type: "application/javascript" }))
       ).catch(console.error);
     }
-  </script>
-
-  <!-- === DarkMode 切替ロジック === -->
-  <script>
-    (function(){
-      const root = document.documentElement;
-      const btn = document.getElementById("theme-btn");
-      const saved = localStorage.getItem("theme");
-      const init  = saved || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light");
-      root.setAttribute("data-theme", init);
-      // 絵文字はコードポイント指定で確実に
-  btn.textContent = init === "dark"
-  ? String.fromCodePoint(0x1F52C)  // 🔬
-  : String.fromCodePoint(0x1F48A); // 💊
-
-      btn.addEventListener("click", ()=>{
-        const next = root.getAttribute("data-theme")==="dark" ? "light" : "dark";
-        root.setAttribute("data-theme", next);
-        localStorage.setItem("theme", next);
-      btn.textContent = next==="dark"
-        ? String.fromCodePoint(0x1F52C)  // 🔬
-        : String.fromCodePoint(0x1F48A); // 💊
-    });
-  })();
   </script>
 
   <!-- === sanitizeHTML ヘルパー === -->
