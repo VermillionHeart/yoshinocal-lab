@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -5,15 +6,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <!-- === DOMPurify (XSS防御用) === -->
   <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
-  <style>
-    /* === prefers-reduced-motion 対応 === */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-  </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>YoshinovaCalc Lab - Universal Calculator</title>
@@ -45,8 +37,6 @@
       --backdrop-blur: blur(10px);
       --card-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
       --card-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
-      --neumorphism-light: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-      --neumorphism-dark: 20px 20px 60px #1e2a3a, -20px -20px 60px #364a5e;
     }
 
     [data-theme="dark"] {
@@ -598,16 +588,16 @@
 
 
     input, select {
-      font-size: 1rem;
-      padding: 1rem 1.2rem;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      font-family: inherit;
-      background: rgba(255, 255, 255, 0.8);
-      color: var(--primary-text);
-      transition: all 0.3s ease;
-      min-height: 48px;
-      font-weight: 500;
+  font-size: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  font-family: inherit;
+  background: var(--input-bg, rgba(255, 255, 255, 0.8));
+  color: var(--primary-text);
+  transition: all 0.3s ease;
+  min-height: 48px;
+  font-weight: 500;
     }
 
     input:focus, select:focus {
@@ -777,11 +767,7 @@
       opacity: 1;
       max-height: 300px;
       transform: translateY(0);
-    }
 
-    .section-result strong {
-      color: var(--success-color);
-      font-weight: 700;
     }
 
     .results-panel {
@@ -868,17 +854,6 @@
       position: relative;
     }
 
-    .results-title::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40px;
-      height: 2px;
-      background: linear-gradient(45deg, var(--primary-blue), var(--success-color));
-    }
-
     .results-grid {
       display: grid;
       gap: 1rem;
@@ -895,16 +870,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-    }
 
-    .result-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary-blue), var(--success-color));
     }
 
     .result-item:hover {
@@ -1293,7 +1259,7 @@
         background: white !important;
       }
     }
-  </style>
+</style>
 </head>
 <body>
   <div class="container">
@@ -1302,10 +1268,10 @@
         <span id="theme-icon">💊</span>
       </div>
       <h1>
-        YoshinovaCalc Lab Ver.1.2
+        YoshinovaCalc Lab Ver.1.3
       </h1>
       <div class="copyright">
-        © 2025 Fumihiko Yoshino. All Rights Reserved. Update:2025-06-18
+        © 2025 Fumihiko Yoshino. All Rights Reserved. Update:2025-06-19
       </div>
     </header>
 
@@ -1638,8 +1604,6 @@
   </div>
 
 <script>
-// グローバル変数
-let currentValidation = { warnings: [], errors: [] };
 let calculationHistory = JSON.parse(localStorage.getItem('molarity-calc-history') || '[]');
 let isDarkMode = localStorage.getItem('theme') === 'dark';
 let activeStates = {
@@ -1670,7 +1634,7 @@ function initializeResultsMinimizeButton() {
   const resultsPanel = document.getElementById('results-panel');
   const minimizeBtn = document.getElementById('results-minimize-btn');
   const minimizeIcon = document.getElementById('results-minimize-icon');
-  const resultsTitle = document.querySelector('.results-title'); // ★追加
+  const resultsTitle = document.querySelector('.results-title'); // 
 
   if (!resultsPanel || !minimizeBtn || !minimizeIcon || !resultsTitle) {
     console.error('結果パネルまたは最小化ボタンの要素が見つかりません');
@@ -1697,7 +1661,7 @@ function initializeResultsMinimizeButton() {
     }
   }
 
-  // ★ここ！
+  // 
   minimizeBtn.addEventListener('click', function(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -1705,24 +1669,21 @@ function initializeResultsMinimizeButton() {
     setResultsPanelMinimized(!isCurrentlyMinimized);
   });
 
-  // ★ここも！
+  // 
   resultsTitle.addEventListener('click', function() {
     if (resultsPanel.classList.contains('minimized')) {
       setResultsPanelMinimized(false);
     }
   });
 
-  // 初期状態の復元
   const shouldBeMinimized = localStorage.getItem('results-panel-minimized') === 'true';
   setResultsPanelMinimized(shouldBeMinimized);
   
-  console.log('結果パネルの最小化ボタンが正常に初期化されました');
 }
 
 
-// 初期化
+
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM読み込み完了、初期化開始...');
   
   if (isDarkMode) {
     document.body.setAttribute('data-theme', 'dark');
@@ -1734,13 +1695,12 @@ document.addEventListener('DOMContentLoaded', function() {
   setupMolarityCalculationListeners();
   updateResultsPanelTitle();
   
-  // 🎯 最小化ボタンの初期化（修正版）
+
   initializeResultsMinimizeButton();
   
-  console.log('初期化完了');
 });
 
-// 🎯 results-panelのタイトルをモードに応じて変更
+
 function updateResultsPanelTitle() {
   const resultsTitle = document.querySelector('.results-title');
   // もし最小化中なら何もしない
@@ -1752,25 +1712,19 @@ function updateResultsPanelTitle() {
   }
 }
 
-// 🎯 計算モード切替
+
 function switchCalculationMode(mode) {
   currentCalculationMode = mode;
   
-  // タブの状態更新
+
   document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
   document.getElementById(`tab-${mode}`).classList.add('active');
   
-  // モード表示切替
+
   document.querySelectorAll('.calculation-mode').forEach(el => el.classList.remove('active'));
   document.getElementById(`${mode}-mode`).classList.add('active');
-  
-  // 結果をクリア
   clearModeResults();
-  
-  // 🎯 results-panelのタイトル更新
   updateResultsPanelTitle();
-  
-  // 計算式の更新
   if (activeStates.formula) {
     updateFormulaDisplay();
   }
@@ -1779,8 +1733,6 @@ function switchCalculationMode(mode) {
     mode === 'stock' ? 'ストック溶液調製モードに切り替えました' : 'モル濃度計算モードに切り替えました', 
     'success'
   );
-  
-  // 🎯 モード切替後に計算を再実行
   if (mode === 'stock') {
     updateMainResults();
   } else {
@@ -1803,7 +1755,6 @@ function clearModeResults() {
   }
 }
 
-// ダークモード切替
 function toggleTheme() {
   isDarkMode = !isDarkMode;
   if (isDarkMode) {
@@ -1817,7 +1768,6 @@ function toggleTheme() {
   }
 }
 
-// キーボードショートカット設定
 function setupKeyboardShortcuts() {
   document.addEventListener('keydown', function(e) {
     if (e.ctrlKey || e.metaKey) {
@@ -1855,7 +1805,7 @@ function setupKeyboardShortcuts() {
   });
 }
 
-// プリセット適用
+
 function applyPreset(name, mw) {
   if (currentCalculationMode === 'stock') {
     document.getElementById('mw').value = mw;
@@ -1868,7 +1818,7 @@ function applyPreset(name, mw) {
   showFloatingNotification(`${name} (MW: ${mw}) がセットされました`, 'success');
 }
 
-// 🎯 改善された通知システム
+
 function showFloatingNotification(message, type = 'info', duration = 3000) {
   const notification = document.createElement('div');
   notification.className = `floating-notification ${type}`;
@@ -1889,7 +1839,7 @@ function showFloatingNotification(message, type = 'info', duration = 3000) {
   }, duration);
 }
 
-// 計算式表示切替
+
 function toggleFormula() {
   activeStates.formula = !activeStates.formula;
   if (activeStates.formula) {
@@ -1906,7 +1856,7 @@ function updateFormulaDisplay() {
   const formulaContent = document.getElementById('formula-content');
 
   if (currentCalculationMode === 'stock') {
-    // 入力値取得
+  
     const mw = document.getElementById('mw').value;
     const molarity = document.getElementById('molarity').value;
     const molarity_unit_el = document.getElementById('molarity_unit');
@@ -1917,7 +1867,7 @@ function updateFormulaDisplay() {
     const volume_unit_txt = volume_unit_el.options[volume_unit_el.selectedIndex].text;
     const volume_unit_val = parseFloat(volume_unit_el.value);
 
-    // 希釈計算用
+    
     const final_molarity = document.getElementById('final_molarity').value;
     const final_molarity_unit = document.getElementById('final_molarity_unit');
     const final_molarity_unit_txt = final_molarity_unit.options[final_molarity_unit.selectedIndex].text;
@@ -1925,25 +1875,22 @@ function updateFormulaDisplay() {
     const final_total_vol_unit = document.getElementById('final_total_vol_unit');
     const final_total_vol_unit_txt = final_total_vol_unit.options[final_total_vol_unit.selectedIndex].text;
 
-    // 体積L換算
+    
     let volume_L = "";
     if (volume && volume_unit_val) {
       volume_L = (parseFloat(volume) * volume_unit_val).toFixed(6);
     }
 
-    // モル濃度mol/L換算
     let molarity_molL = "";
     if (molarity && molarity_unit_val) {
       molarity_molL = (parseFloat(molarity) * molarity_unit_val).toExponential(6);
     }
 
-    // 必要薬量（g）計算
     let mass = "";
     if (mw && molarity && molarity_unit_val && volume && volume_unit_val) {
       mass = (parseFloat(mw) * parseFloat(molarity) * molarity_unit_val * parseFloat(volume) * volume_unit_val).toFixed(6);
     }
 
-    // 必要薬量の例
     let stockExample = '';
     if (mw && molarity && volume) {
       stockExample = `
@@ -1958,7 +1905,6 @@ function updateFormulaDisplay() {
       `;
     }
 
-    // 希釈計算の例
     let dilutionExample = '';
     if (final_molarity && final_total_vol && molarity) {
       dilutionExample = `
@@ -1968,8 +1914,6 @@ function updateFormulaDisplay() {
         <div style="color:#718096;font-size:0.9em;">[単位: ${final_molarity_unit_txt}, ${final_total_vol_unit_txt}, ${molarity_unit_txt}]</div>
       `;
     }
-
-    // 希釈倍率の例
     let factorExample = '';
     if (molarity && final_molarity) {
       factorExample = `
@@ -1979,7 +1923,6 @@ function updateFormulaDisplay() {
       `;
     }
 
-    // ここでまとめてHTMLにセット
     formulaContent.innerHTML = `
       <div style="margin-bottom:1.5em;">
         <span style="font-weight:bold;">
@@ -1997,8 +1940,7 @@ function updateFormulaDisplay() {
         ${factorExample}
       </div>
     `;
-  } else {
-    // モル濃度計算モード
+  } else {    
     const drug_amount = document.getElementById('drug_amount').value;
     const drug_unit = document.getElementById('drug_unit').value;
     const liquid_volume = document.getElementById('liquid_volume').value;
@@ -2037,7 +1979,6 @@ function updateFormulaDisplay() {
   }
 }
 
-// 履歴表示切替
 function toggleHistory() {
   const historyPanel = document.getElementById('history-panel');
   const historyBtn = document.getElementById('history-btn');
@@ -2053,8 +1994,6 @@ function toggleHistory() {
     historyBtn.classList.remove('active');
   }
 }
-
-// 履歴保存
 function saveToHistory() {
   if (currentCalculationMode === 'stock') {
     const mw = parseFloat(document.getElementById('mw').value);
@@ -2085,7 +2024,6 @@ function saveToHistory() {
       localStorage.setItem('molarity-calc-history', JSON.stringify(calculationHistory));
     }
   } else {
-    // モル濃度計算の履歴保存
     const drugAmount = parseFloat(document.getElementById('drug_amount').value);
     const liquidVolume = parseFloat(document.getElementById('liquid_volume').value);
     const molecularWeight = parseFloat(document.getElementById('molecular_weight').value);
@@ -2122,8 +2060,6 @@ function saveToHistory() {
     }
   }
 }
-
-// 履歴読み込み
 function loadHistory() {
   const historyContent = document.getElementById('history-content');
   const modeHistory = calculationHistory.filter(item => 
@@ -2163,8 +2099,6 @@ function loadHistory() {
   
   historyContent.innerHTML = historyHTML;
 }
-
-// 履歴から読み込み
 function loadFromHistory(index) {
   const item = calculationHistory[index];
   
@@ -2221,8 +2155,6 @@ function loadFromHistoryMolarity(item) {
   document.getElementById('drug_name').value = item.drugName || '';
   calculateMolarity();
 }
-
-// 履歴クリア
 function clearHistory() {
   if (confirm('履歴をすべて削除しますか？')) {
     calculationHistory = [];
@@ -2232,7 +2164,6 @@ function clearHistory() {
   }
 }
 
-// 全クリア
 function clearAll() {
   if (confirm('すべての入力をクリアしますか？')) {
     if (currentCalculationMode === 'stock') {
@@ -2251,8 +2182,7 @@ function clearAll() {
       document.getElementById('drug_name').value = '';
       calculateMolarity();
     }
-    
-    // アクティブ状態もリセット
+
     if (activeStates.formula) toggleFormula();
     if (activeStates.history) toggleHistory();
     
@@ -2261,7 +2191,6 @@ function clearAll() {
   }
 }
 
-// 🎯 結果エクスポート関数を更新
 function exportResults() {
   const resultsContent = document.getElementById('results-content');
   const hasResults = !resultsContent.querySelector('.results-placeholder');
@@ -2274,12 +2203,12 @@ function exportResults() {
   const printWindow = window.open('', '_blank');
   const modeTitle = currentCalculationMode === 'stock' ? 'ストック溶液調製' : 'モル濃度計算';
   const results = resultsContent.innerHTML;
-  
-    // ES5莠呈鋤・壽枚蟄怜・騾｣邨舌〒HTML邨・ｫ具ｼ・・蜉・
   var html =
     '<!DOCTYPE html>' +
     '<html lang="ja">' +
-    '<head><meta charset="UTF-8"><title>YoshinovaCalc Lab ' + modeTitle + ' 邨先棡</title>' +
+    '<head>' +
+      '<meta charset="UTF-8">' +
+      '<title>YoshinovaCalc Lab ' + modeTitle + ' 出力</title>' +
       '<style>' +
         'body{font-family:Inter,system-ui,sans-serif;margin:20px;color:#333;}' +
         '.header{text-align:center;margin-bottom:20px;border-bottom:2px solid #4299e1;padding-bottom:10px;}' +
@@ -2287,17 +2216,19 @@ function exportResults() {
       '</style>' +
     '</head>' +
     '<body>' +
-      '<div class="header"><h1>ｧｬ YoshinovaCalc Lab ｧｬ</h1>' +
-      '<p>' + modeTitle + ' 邨先棡 - ' + new Date().toLocaleString('ja-JP') + '</p></div>' +
+      '<div class="header">' +
+        '<h1>YoshinovaCalc Lab</h1>' +
+        '<p>' + modeTitle + ' - ' + new Date().toLocaleString('ja-JP') + '</p>' +
+      '</div>' +
       '<div class="results">' + results + '</div>' +
     '</body>' +
     '</html>';
+  
   printWindow.document.write(html);
   printWindow.document.close();
   printWindow.print();
 }
 
-// 🎯 モル濃度計算の実装（results-panel統一版）
 function setupMolarityCalculationListeners() {
   const molarityInputs = ['drug_amount', 'drug_unit', 'liquid_volume', 'liquid_unit', 'molecular_weight', 'drug_name'];
   molarityInputs.forEach(id => {
@@ -2444,8 +2375,6 @@ function calculateMolarity() {
   }
 }
 
-// 🎯 既存の関数群（ストック溶液計算用）
-
 function setInputError(inputId, message, isWarning = false) {
   const errorEl = document.getElementById('error-' + inputId.replace('_','-'));
   const inputEl = document.getElementById(inputId);
@@ -2502,18 +2431,18 @@ function updateInputStatus(inputId, isValid, isEmpty = false) {
   const statusEl = document.getElementById(`status-${inputId.replace('_', '-')}`);
   const inputEl = document.getElementById(inputId);
   if (!statusEl || !inputEl) return;
-  
+
+  inputEl.classList.remove('valid', 'invalid', 'warning');
   if (isEmpty) {
     statusEl.textContent = '';
-    inputEl.className = inputEl.className.replace(/\s*(valid|invalid|warning)/, '');
   } else if (isValid) {
     statusEl.textContent = '✓';
     statusEl.style.color = 'var(--success-color)';
-    inputEl.className = inputEl.className.replace(/\s*(valid|invalid|warning)/, '') + ' valid';
+    inputEl.classList.add('valid'); // 
   } else {
     statusEl.textContent = '⚠';
     statusEl.style.color = 'var(--error-color)';
-    inputEl.className = inputEl.className.replace(/\s*(valid|invalid|warning)/, '') + ' invalid';
+    inputEl.classList.add('invalid'); // 
   }
 }
 
@@ -2967,9 +2896,5 @@ updateMainResults();
       ).catch(console.error);
     }
   </script>
-
-  <!-- === sanitizeHTML ヘルパー === -->
-  <script>
-    const sanitizeHTML = html => DOMPurify.sanitize(html);
-  </script></body>
+</body>
 </html>
