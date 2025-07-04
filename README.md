@@ -46,7 +46,7 @@ YoshinovaCalc Labは、研究室での試薬調製や希釈計算を効率化す
 
 MIT License
 
-Copyright (c) 2024 吉野文彦 (Fumihiko Yoshino)
+Copyright (c) 2025 吉野文彦 (Fumihiko Yoshino)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
